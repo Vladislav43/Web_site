@@ -1,0 +1,6 @@
+Name: FreelancerVovka
+About: Hello, I am a bot that will help you find freelance works.
+Description: This bot works as freelance work finder. It help you to find job very fast. This bot very easy to use. So let's find some work for you!
+Description picture: 🖼 has a description photo
+Botpic: 🖼 has a botpic
+Commands: no commands yet
