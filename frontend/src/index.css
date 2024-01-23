@@ -94,13 +94,14 @@ header .sign_len_buttons :hover{
   position: absolute;
   background-color: white;
   border: solid 1px black;
-  margin: 53px 0 0 0;
+  margin-top: 53px;
 }
 
 .nav ul{
   display: flex;
   flex-direction: column;
   background-color: white;
+  padding: 0; 
 }
 
 .nav ul li{
