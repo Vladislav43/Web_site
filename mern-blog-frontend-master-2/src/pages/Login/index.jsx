@@ -9,17 +9,19 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData, selectIsAuth } from "./../../redux/slices/auth.js";
 
 
 export const Login = () => {
-  const IsAuth=useSelector(selectIsAuth);
+
+  const IsAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
+
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      email: 'lol52a3@3example.com',
-      password: 'secur2233epa4ss',
+      email: 'yurii@gmail.com',
+      password: 'yurii',
     },
   });
 
@@ -27,7 +29,7 @@ export const Login = () => {
     dispatch(fetchUserData(values))
   };
 
-  console.log('IsAuth',IsAuth);
+  // console.log('IsAuth',IsAuth);
 
   return (
     <Paper classes={{ root: styles.root }}>
