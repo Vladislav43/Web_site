@@ -6,14 +6,14 @@ import { validationResult } from 'express-validator';
 import { registerValidation } from './validations/auth.js';
 
 import * as UserController from './controllers/UserController.js'; 
-
+import cors from "cors"
 import checkauth from './utils/checkauth.js';
-mongoose.connect('mongodb+srv://voievoda:orewit123.@cluster0.hjg23dj.mongodb.net/blog?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://voievoda:orewit123.@cluster0.hjg23dj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 .then(()=> console.log('db ok'))
 .catch((err)=>console.log('Db error'))
 const app = express();
-const port = 41434;
-
+const port = 7300;
+app.use(cors())
 app.use(express.json());
 
 app.get('/', (req, res) => {

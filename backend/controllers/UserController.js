@@ -50,6 +50,7 @@ export const register = async (req, res) => {
   }
 export const login = async (req, res) => {
     try{
+      console.log('wewefwef')
       const user = await usermodel.findOne({ email: req.body.email});
   
       if (!user) {
