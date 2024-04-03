@@ -1,15 +1,40 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchUserData = createAsyncThunk('auth/fetchUserData', async (params) => {
-  const { data } = await axios.post('http://localhost:7300/auth/login', params);
-  console.log(data)
+import instance from './../axios.js';
+
+export const fetchUserData = createAsyncThunk(
+  'auth/fetchUserData',
+  async (params, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post('http://localhost:7300/auth/login', params);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async () => {
+  const { data } = await instance.get('http://localhost:7300/auth/me');
   return data;
 });
 
+export const fetchRegister = createAsyncThunk('auth/fetchRegister',async (params, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post('http://localhost:7300/auth/register', params);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
-  data: {},
-  status: 'loading',
+  data: null,
+  status: 'idle',
+  authError: null,
 };
 
 const authSlice = createSlice({
@@ -18,24 +43,54 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.data = null;
-    }
+      state.status = 'idle';
+      state.authError = null;
+    },
   },
   extraReducers: {
     [fetchUserData.pending]: (state) => {
       state.status = 'loading';
       state.data = null;
+      state.authError = null;
     },
     [fetchUserData.fulfilled]: (state, action) => {
-      state.status = 'loaded';
+      state.status = 'succeeded';
       state.data = action.payload;
+      state.authError = null;
     },
-    [fetchUserData.rejected]: (state) => {
-      state.status = 'error';
+    [fetchUserData.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.data = null;
+      state.authError = action.payload;
+    },
+    [fetchAuthMe.pending]: (state) => {
+      state.status = 'loading';
       state.data = null;
     },
+    [fetchAuthMe.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.data = action.payload;
+    },
+    [fetchAuthMe.rejected]: (state) => {
+      state.status = 'failed';
+      state.data = null;
+    },
+    [fetchRegister.pending]: (state) => {
+      state.status = 'loading';
+      state.data = null;
+    },
+    [fetchRegister.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.data = action.payload;
+    },
+    [fetchRegister.rejected]: (state) => {
+      state.status = 'failed';
+      state.data = null;
+    }
   },
 });
-export const selectIsAuth = state => Boolean(state.auth.data);
 
+export const selectIsAuth = (state) => Boolean(state.auth.data);
+export const selectAuthError = (state) => state.auth.authError;
 export const authReducer = authSlice.reducer;
 export const { logout } = authSlice.actions;
