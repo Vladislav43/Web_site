@@ -10,9 +10,14 @@ import { fetchUserData, selectIsAuth, selectAuthError } from "./../../redux/slic
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from "react-router-dom";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+
+
+
+
 
 export const Login = () => {
-  //const isAuth = useSelector(selectIsAuth);
+  const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [authError, setAuthError] = React.useState(null);

@@ -14,6 +14,7 @@ export const fetchUserData = createAsyncThunk(
     }
   }
 );
+export const selectUserData = state => state.auth.userData;
 
 export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async () => {
   const { data } = await instance.get('http://localhost:7300/auth/me');

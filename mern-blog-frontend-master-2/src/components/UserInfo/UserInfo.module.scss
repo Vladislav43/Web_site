@@ -1,26 +1,29 @@
-.root {
+.header {
   display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
-  margin-right: 10px;
-}
-
-.userName {
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.userDetails {
-  display: flex;
+  padding: 0.5rem 1.25rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  border-radius: 0.25rem;
+  border-width: 0;
+  height: 2.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #1F2937;
+  /* For responsiveness */
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 }
 
-.additional {
-  font-size: 12px;
-  opacity: 0.6;
+.header:hover {
+  background-color: #374151;
 }

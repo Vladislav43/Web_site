@@ -1,7 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-
 import styles from './Header.module.scss';
 import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom'
@@ -17,13 +17,11 @@ export const Header = () => {
     const token = window.localStorage.getItem('token');
     if (token) {
       dispatch(fetchAuthMe()).then(() => {
-        // Затримка відображення контенту на 2 секунди
         setTimeout(() => {
           setIsLoading(false);
         }, 200);
       });
     } else {
-      // Затримка відображення контенту на 2 секунди
       setTimeout(() => {
         setIsLoading(false);
       }, 200);
@@ -46,7 +44,6 @@ export const Header = () => {
           </Link>
           <div className={styles.buttons}>
             {isLoading ? (
-              // Відображення індикатора завантаження протягом 2 секунд
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <CircularProgress size={24} />
                 <span style={{ marginLeft: '8px' }}>Завантаження...</span>
@@ -55,8 +52,14 @@ export const Header = () => {
               <>
                 {isAuth ? (
                   <>
-                    <Link to="/posts/create">
-                      <Button variant="contained">Написати статтю</Button>
+                     <Link to="/anceta">
+                      <Button variant="outlined">До анкет</Button>
+                    </Link>   
+                    <Link to="/user_info">
+                      <Button variant="outlined">Особистий кабінет</Button>
+                    </Link>
+                    <Link to="/fill_out_a_form">
+                      <Button variant="contained">Добавити анкету</Button>
                     </Link>
                     <Button onClick={onClickLogout} variant="contained" color="error">
                       Вийти

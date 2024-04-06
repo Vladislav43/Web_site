@@ -1,32 +1,45 @@
+$primary-color: #4361ee;
+$secondary-color: black;
+$text-color: #fff;
+$border-color: #e0e0e0;
+$max-width: 1200px;
+
 .root {
   background-color: #fff;
   padding: 10px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid $border-color;
   margin-bottom: 30px;
 }
 
 .inner {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  max-width: $max-width;
+  margin: 0 auto;
 }
 
 .logo {
-  background-color: black;
-  color: #fff;
+  background-color: $secondary-color;
+  color: $text-color;
   font-weight: 700;
   line-height: 35px;
   text-transform: uppercase;
   letter-spacing: 0.15px;
   border-radius: 5px;
-  padding: 0 10px;
+  padding: 0 20px;
   text-decoration: none;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #4361ee;
+    background-color: $primary-color;
   }
 }
 
 .buttons {
+  display: flex;
+  align-items: center;
+
   button {
     margin-left: 10px;
   }
