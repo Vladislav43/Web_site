@@ -40,7 +40,7 @@ export const Header = () => {
       <Container maxWidth="lg">
         <div className={styles.inner}>
           <Link className={styles.logo} to="/">
-            <div>VOJED</div>
+            <div>VoJeD</div>
           </Link>
           <div className={styles.buttons}>
             {isLoading ? (

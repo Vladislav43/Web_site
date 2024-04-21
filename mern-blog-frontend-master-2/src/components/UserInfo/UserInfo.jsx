@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./UserInfo.module.scss";
 import instance from "../../redux/axios";
+//import avatarImage from '/Users/Petrea/Documents/GitHub/Web_site/mern-blog-frontend-master-2/public/noavatar.png'
 
 export const UserInfo = ({ token }) => {
   const [userData, setUserData] = useState(null);
@@ -72,54 +73,66 @@ export const UserInfo = ({ token }) => {
 
   return (
     <div className={styles.root}>
-      <div>
-        Email:{" "}
+      <div className={styles.userInfo}>
+        <img
+          className={styles.avatar}
+         // src={avatarImage} 
+          // src={userData.avatarUrl || "https://www.seekpng.com/ima/u2e6y3e6q8r5q8a9/"}
+          alt={userData.fullname}
+        />
+        <div className={styles.details}>
+          <div className={styles.field}>
+            <span className={styles.label}>Email:</span>
+            <span className={styles.value}>
+              {isEditing ? (
+                <input
+                  type="email"
+                  value={editedEmail}
+                  onChange={(e) => setEditedEmail(e.target.value)}
+                  className={styles.input}
+                />
+              ) : (
+                userData.email
+              )}
+            </span>
+          </div>
+          <div className={styles.field}>
+            <span className={styles.label}>Full Name:</span>
+            <span className={styles.value}>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedFullName}
+                  onChange={(e) => setEditedFullName(e.target.value)}
+                  className={styles.input}
+                />
+              ) : (
+                userData.fullname
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className={styles.actions}>
         {isEditing ? (
-          <input
-            type="email"
-            value={editedEmail}
-            onChange={(e) => setEditedEmail(e.target.value)}
-          />
+          <>
+            <input
+              type="password"
+              placeholder="New Password"
+              value={editedPassword}
+              onChange={(e) => setEditedPassword(e.target.value)}
+              className={styles.input}
+            />
+            <button onClick={handleSaveChanges} className={styles.saveButton}>
+              Save Changes
+            </button>
+          </>
         ) : (
-          userData.email
+          <button onClick={handleEditClick} className={styles.editButton}>
+            Edit Profile
+          </button>
         )}
       </div>
-      <img
-        className={styles.avatar}
-        src={userData.avatarUrl || "https://www.seekpng.com/ima/u2e6y3e6q8r5q8a9/"}
-        alt={userData.fullname}
-      />
-      <span className={styles.userName}>
-        Дата приєднання : {userData.createdAt}
-      </span>
-      <div className={styles.userDetails}>
-        <span className={styles.userName}>
-          Full Name:{" "}
-          {isEditing ? (
-            <input
-              type="text"
-              value={editedFullName}
-              onChange={(e) => setEditedFullName(e.target.value)}
-            />
-          ) : (
-            userData.fullname
-          )}
-        </span>
-        <span className={styles.additional}>{userData.additionalText}</span>
-      </div>
-      {isEditing ? (
-        <>
-          <input
-            type="password"
-            placeholder="New Password"
-            value={editedPassword}
-            onChange={(e) => setEditedPassword(e.target.value)}
-          />
-          <button onClick={handleSaveChanges}>Save Changes</button>
-        </>
-      ) : (
-        <button onClick={handleEditClick}>Edit Profile</button>
-      )}
     </div>
   );
 };
