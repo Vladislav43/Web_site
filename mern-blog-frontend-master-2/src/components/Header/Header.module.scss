@@ -1,14 +1,35 @@
-$primary-color: #4361ee;
-$secondary-color: black;
+// Variables
+$primary-color: #fe3c72;
+$secondary-color: #fff;
 $text-color: #fff;
-$border-color: #e0e0e0;
+$border-color: transparent;
 $max-width: 1200px;
+$border-radius: 50px;
+$shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+// Mixins
+@mixin button-styles {
+  background-color: transparent;
+  border: none;
+  color: $text-color;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: $border-radius;
+  padding: 10px 20px;
+
+  &:hover {
+    background-color: rgba($text-color, 0.1);
+  }
+}
 
 .root {
-  background-color: #fff;
+  background-color: $primary-color;
   padding: 10px 0;
   border-bottom: 1px solid $border-color;
-  margin-bottom: 30px;
+  box-shadow: $shadow;
 }
 
 .inner {
@@ -17,22 +38,24 @@ $max-width: 1200px;
   align-items: center;
   max-width: $max-width;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
 .logo {
-  background-color: $secondary-color;
-  color: $text-color;
+  color: rebeccapurple;
   font-weight: 700;
-  line-height: 35px;
   text-transform: uppercase;
   letter-spacing: 0.15px;
-  border-radius: 5px;
-  padding: 0 20px;
+  border-radius: $border-radius;
+  padding: 10px 20px;
   text-decoration: none;
-  transition: background-color 0.3s ease;
+  background-image: linear-gradient(45deg, $primary-color, pink, pink);
+  background-size: 300% 100%;
+  background-position: 100% 50%;
+  transition: background-position 0.5s ease;
 
   &:hover {
-    background-color: $primary-color;
+    background-position: 0% 50%;
   }
 }
 
@@ -40,8 +63,11 @@ $max-width: 1200px;
   display: flex;
   align-items: center;
 
+  // Оновлено стилі для кнопок
   button {
+    @include button-styles;
     margin-left: 10px;
+    border: 1px solid transparent; // Додали параметр border
   }
 
   a {

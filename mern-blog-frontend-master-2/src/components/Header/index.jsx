@@ -53,10 +53,10 @@ export const Header = () => {
                 {isAuth ? (
                   <>
                      <Link to="/anceta">
-                      <Button variant="outlined">До анкет</Button>
+                      <Button variant="contained">До анкет</Button>
                     </Link>   
                     <Link to="/user_info">
-                      <Button variant="outlined">Особистий кабінет</Button>
+                      <Button variant="contained">Особистий кабінет</Button>
                     </Link>
                     <Link to="/fill_out_a_form">
                       <Button variant="contained">Добавити анкету</Button>
@@ -68,7 +68,7 @@ export const Header = () => {
                 ) : (
                   <>
                     <Link to="/login">
-                      <Button variant="outlined">Увійти</Button>
+                      <Button variant="contained">Увійти</Button>
                     </Link>
                     <Link to="/register">
                       <Button variant="contained">Створити акаунт</Button>

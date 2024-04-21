@@ -1,0 +1,45 @@
+.root {
+    background-color: #ff6b6b;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  .container {
+    max-width: 600px;
+    text-align: center;
+    color: #fff;
+  }
+  
+  .info {
+    margin-bottom: 2rem;
+  
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+  
+    p {
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+  }
+  
+  .loginButton {
+    display: inline-block;
+    background-color: #fff;
+    color: #ff6b6b;
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  
+    &:hover {
+      background-color: #ff6b6b;
+      color: #fff;
+    }
+  }
