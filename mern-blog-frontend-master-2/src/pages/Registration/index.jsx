@@ -1,11 +1,11 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { useDispatch } from 'react-redux';
-import { fetchRegister } from './../../redux/slices/auth.js';
+import { fetchRegister,fetchAuthMe } from './../../redux/slices/auth.js';
 import styles from './Login.module.scss';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -40,8 +40,15 @@ export const Registration = () => {
       }
     }
   };
-
+  // useEffect(() => {
+  //   // Перевірка статусу авторизації при завантаженні компонента
+  //   if (fetchAuthMe) {
+  //     // Якщо користувач вже авторизувався, перенаправляємо його на головну сторінку
+  //     navigate('/');
+  //   }
+  // }, [fetchAuthMe, navigate]);
   return (
+
     <Paper classes={{ root: styles.root }}>
       <Typography classes={{ root: styles.title }} variant="h5">
         Створення облікового запису

@@ -2,37 +2,41 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  background-color: #fff; /* Змінено колір фону на білий */
-  border-radius: 1rem; /* Збільшено радіус кутів */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Змінено тінь */
+  padding: 2rem; /* Збільшено відступи для більшого простору */
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  .avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-    border: 4px solid #fff; /* Додано білий обрамляючий колір для аватара */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тінь для аватара */
-  }
+.avatar {
+  width: 200px; /* Збільшено розмір аватара */
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Збільшено тінь */
+}
 
-  .userName {
-    font-size: 1.5rem; /* Збільшено розмір шрифту імені */
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
+.userName {
+  font-size: 2rem; /* Збільшено розмір шрифту імені */
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-align: center; /* Вирівняно текст по центру */
+}
 
-  .userDetails {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%; /* Зроблено ширину 100% для посереднього вирівнювання */
 
-    .additional {
-      font-size: 1rem; /* Збільшено розмір додаткового тексту */
-      color: #666;
-    }
+  .additional {
+    font-size: 1.2rem; /* Збільшено розмір додаткового тексту */
+    color: #666;
+    text-align: center; /* Вирівняно текст по центру */
+    margin-top: 0.5rem; /* Додано відступ зверху */
   }
 }

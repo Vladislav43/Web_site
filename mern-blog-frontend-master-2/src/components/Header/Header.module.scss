@@ -27,18 +27,19 @@ $shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
 .root {
   background-color: $primary-color;
-  padding: 10px 0;
   border-bottom: 1px solid $border-color;
   box-shadow: $shadow;
+  width: 100%; /* Розтягуємо на всю ширину */
+  padding: 10px 0; /* Змініть або видаліть відповідно до потреб */
 }
 
 .inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: $max-width;
+  max-width: 100%; /* Розтягуємо на всю ширину */
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 20px; /* Змініть або видаліть відповідно до потреб */
 }
 
 .logo {
@@ -65,6 +66,7 @@ $shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   // Оновлено стилі для кнопок
   button {
+    background-image:  black;
     @include button-styles;
     margin-left: 10px;
     border: 1px solid transparent; // Додали параметр border

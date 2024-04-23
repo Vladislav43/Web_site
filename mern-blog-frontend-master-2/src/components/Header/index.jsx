@@ -19,12 +19,12 @@ export const Header = () => {
       dispatch(fetchAuthMe()).then(() => {
         setTimeout(() => {
           setIsLoading(false);
-        }, 200);
+        }, 5);
       });
     } else {
       setTimeout(() => {
         setIsLoading(false);
-      }, 200);
+      }, 5);
     }
   }, [dispatch]);
 
@@ -46,7 +46,7 @@ export const Header = () => {
             {isLoading ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <CircularProgress size={24} />
-                <span style={{ marginLeft: '8px' }}>Завантаження...</span>
+                <span style={{ marginLeft: '8px' }}></span>
               </div>
             ) : (
               <>

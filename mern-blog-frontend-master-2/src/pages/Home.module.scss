@@ -4,7 +4,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    background-image: url('./../photo/nature-pirs-more-priboi-rozovii-105616.jpeg'); 
+    background-size: cover; /* Заповнюємо весь екран */
+    background-position: center; /* Центруємо зображення */
   }
   
   .container {
