@@ -1,0 +1,77 @@
+
+.onboarding {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.onboarding h2 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.onboarding form {
+    display: flex;
+    flex-direction: column;
+}
+
+.onboarding label {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.onboarding input[type='text'],
+.onboarding input[type='number'],
+.onboarding input[type='url'],
+.onboarding textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.onboarding .multiple-input-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.onboarding .multiple-input-container label {
+    margin-right: 8px;
+}
+
+.onboarding .photo-container {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.onboarding .photo-container img {
+    max-width: 100%;
+    max-height: 200px;
+    margin-top: 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.onboarding input[type='submit'] {
+    background-color: #ff5a5f;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.onboarding input[type='submit']:hover {
+    background-color: #ff4247;
+}

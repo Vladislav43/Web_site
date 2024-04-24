@@ -4,6 +4,7 @@ import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
 import { fetchAuthMe } from './../redux/slices/auth'; // Імпорт thunk-функції для отримання даних авторизації
 import backgroundImage from './../photo/nature-pirs-more-priboi-rozovii-105616.jpeg';
+import { Container } from '@mui/material';
 
 
 export const Home = () => {
@@ -15,7 +16,8 @@ export const Home = () => {
   }, [dispatch]);
 
   return (
-    <div className={styles.root} style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div className={styles.root}
+     style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className={styles.container}>
         <div className={styles.info}>
           <h1>Знайди свою другу половинку</h1>

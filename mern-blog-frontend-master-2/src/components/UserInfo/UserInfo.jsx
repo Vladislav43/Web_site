@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./UserInfo.module.scss";
 import instance from "../../redux/axios";
+import { Container } from "@mui/material";
 //import avatarImage from '/Users/Petrea/Documents/GitHub/Web_site/mern-blog-frontend-master-2/public/noavatar.png'
 
 export const UserInfo = ({ token }) => {
@@ -72,6 +73,7 @@ export const UserInfo = ({ token }) => {
   }
 
   return (
+    <Container>
     <div className={styles.root}>
       <div className={styles.userInfo}>
         <img
@@ -134,5 +136,6 @@ export const UserInfo = ({ token }) => {
         )}
       </div>
     </div>
+    </Container>
   );
 };

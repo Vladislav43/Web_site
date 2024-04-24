@@ -5,10 +5,8 @@ import { Home, Registration, Login } from "./pages";
 import React, { useEffect } from "react";
 import { fetchAuthMe, selectIsAuth, } from "./redux/slices/auth";
 import {UserInfo} from './components/UserInfo/UserInfo.jsx'
-import {UserInfo1} from './pages/fill_out_a_form/fill_out_a_form.jsx'
-
+import OnBoarding from './pages/OnBoarding/OnBoarding.jsx'
 import { useDispatch, useSelector } from "react-redux";
-
 function App() {
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
@@ -20,15 +18,13 @@ function App() {
   return (
     <>
       <Header />
-      <Container maxWidth="lg">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/user_info" element={<UserInfo />} />
-          <Route path="/fill_out_a_form" element={< fill_out_a_form/>} />
+          <Route path="/fill_out_a_form" element={<OnBoarding/>} />
         </Routes>
-      </Container>
     </>
   );
 }

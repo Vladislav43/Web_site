@@ -19,12 +19,12 @@ export const Header = () => {
       dispatch(fetchAuthMe()).then(() => {
         setTimeout(() => {
           setIsLoading(false);
-        }, 5);
+        }, 400);
       });
     } else {
       setTimeout(() => {
         setIsLoading(false);
-      }, 5);
+      }, 400);
     }
   }, [dispatch]);
 
