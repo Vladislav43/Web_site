@@ -170,12 +170,14 @@ export const getmy = async (req, res) => {
 // Update a User in the Database
 export const updateUser = async (req, res) => {
   const formData = req.body;
-  
+  console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 console.log(formData);
   try {
     const user = await usermodel.findOne({ _id: req.body.user_id});
    // const user = await usermodel.findById(req.userId); 
+
     console.log("user : ",user);
+    console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
     if (!user) {
       return res.status(404).json({ message: "Користувача не знайдено" });
     }
