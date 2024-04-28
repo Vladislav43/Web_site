@@ -16,13 +16,13 @@ import {useCookies} from 'react-cookie'
 
 
 export const Login = () => {
-  const isAuth = useSelector(selectIsAuth);
+  //const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
-  const [cookies, setCookie, removeCookie] = useCookies(null)
+  const [setCookie ] = useCookies(null)
   const navigate = useNavigate();
   const [authError, setAuthError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false); // Доданий стан для відстеження показу пароля
-  const isAuthenticated = useSelector((state) => Boolean(state.auth.data));
+  //const isAuthenticated = useSelector((state) => Boolean(state.auth.data));
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       email: '',

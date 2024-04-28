@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import { check, cookie, validationResult } from 'express-validator';
 
 import usermodel from '../models/User.js';
-const uri = 'mongodb+srv://voievoda:orewit123.@cluster0.hjg23dj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 export const register = async (req, res) => {
     try {
         await Promise.all([
@@ -47,7 +46,6 @@ export const register = async (req, res) => {
                 expiresIn: '30d'
             }
         );
-
         const { passwordhash, ...userData } = savedUser._doc;
 
         res.json({
@@ -107,7 +105,6 @@ export const login = async (req, res) => {
 export const getmy = async (req, res) => {
     try {
       const user = await usermodel.findById(req.userId);
-  
       console.log(user)
   
       if (!user) {
