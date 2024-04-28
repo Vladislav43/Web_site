@@ -9,6 +9,6 @@ router.post('/logout');
 router.get('/activate/:link');
 router.get('/refresh')
 router.get('/users')
-
+router.put('/update', verifyToken, updateUser);
 
 module.exports = router

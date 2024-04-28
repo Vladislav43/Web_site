@@ -8,7 +8,7 @@ import styles from './OnBoarding.module.scss';
 const OnBoarding = () => {
     const [cookies, setCookie, removeCookie] = useCookies(null)
     const [formData, setFormData] = useState({
-        user_id: cookies.UserId,
+        user_id: cookies.user_id,
         first_name: "",
         dob_day: "",
         dob_month: "",
@@ -26,11 +26,12 @@ const OnBoarding = () => {
     const handleSubmit = async (e) => {
         console.log('submitted')
         e.preventDefault()
+        
         try {
-            const response = await axios.put('http://localhost:7300/user', {formData})
+            const response = await axios.put('http://localhost:7300/updateUser', {...formData})
             console.log(response)
             const success = response.status === 200
-            if (success) navigate('/dashboard')
+            if (success) navigate('/anceta')
         } catch (err) {
             console.log(err)
         }

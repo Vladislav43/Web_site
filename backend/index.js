@@ -25,7 +25,7 @@ app.post('/auth/register', registerValidation, UserController.register);
 app.post('/auth/login', UserController.login);
 
 app.get('/auth/me', checkauth, UserController.getmy);
-
+app.put('/updateUser', UserController.updateUser);
 app.listen(port, function (err) {
   if (err) {
     return console.log(err);

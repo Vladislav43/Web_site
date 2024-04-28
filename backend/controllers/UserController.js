@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { check, validationResult } from 'express-validator';
+import { check, cookie, validationResult } from 'express-validator';
 
 import usermodel from '../models/User.js';
-
+const uri = 'mongodb+srv://voievoda:orewit123.@cluster0.hjg23dj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 export const register = async (req, res) => {
     try {
         await Promise.all([
@@ -125,3 +125,83 @@ export const getmy = async (req, res) => {
       });
     }
   }
+//   }
+//   export const updateUser = async (req, res) => {
+//     try {
+//         const { first_name, dob_day, dob_month, dob_year, show_gender, gender_identity, gender_interest, url, about, matches } = req.body;
+
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             const errorMessages = errors.array().map(error => error.msg);
+//             return res.status(400).json({ errors: errorMessages });
+//         }
+
+//         // Find the existing user by userId
+//         setCookie('user_id',data.payload._id);
+
+//         const existingUser = await usermodel.findById(req.userId);
+//         console.log(cookie.user_id);
+      
+//         if (!existingUser) {
+//             return res.status(404).json({
+//                 message: "Користувача не знайдено"
+//             });
+//         }
+
+//         // Update user fields
+//         existingUser.first_name = first_name;
+//         existingUser.dob_day = dob_day;
+//         existingUser.dob_month = dob_month;
+//         existingUser.dob_year = dob_year;
+//         existingUser.show_gender = show_gender;
+//         existingUser.gender_identity = gender_identity;
+//         existingUser.gender_interest = gender_interest;
+//         existingUser.url = url;
+//         existingUser.about = about;
+//         existingUser.matches = matches;
+
+//         // Save the updated user in the database
+//         const updatedUser = await existingUser.save();
+
+//         res.json({ message: 'Користувача успішно оновлено', user: updatedUser });
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({ message: 'Помилка при оновленні користувача' });
+//     }
+// };
+
+// Update a User in the Database
+export const updateUser = async (req, res) => {
+  const formData = req.body;
+  
+console.log(formData);
+  try {
+    const user = await usermodel.findOne({ _id: req.body.user_id});
+   // const user = await usermodel.findById(req.userId); 
+    console.log("user : ",user);
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+    
+
+    // Оновлюємо поля користувача на основі formData
+    user.fullname = formData.first_name;
+    user.dob_day = formData.dob_day;
+    user.dob_month = formData.dob_month;
+    user.dob_year = formData.dob_year;
+    user.show_gender = formData.show_gender;
+    user.gender_identity = formData.gender_identity;
+    user.gender_interest = formData.gender_interest;
+    user.url = formData.url;
+    user.about = formData.about;
+    user.matches = formData.matches;
+
+    // Зберігаємо оновлений документ користувача у базі даних
+    const updatedUser = await user.save();
+
+    res.json({ message: 'Користувача успішно оновлено', user: updatedUser });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Помилка при оновленні користувача' });
+  }
+};

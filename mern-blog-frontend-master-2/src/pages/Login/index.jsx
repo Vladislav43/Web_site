@@ -12,12 +12,13 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
-
+import {useCookies} from 'react-cookie'
 
 
 export const Login = () => {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const navigate = useNavigate();
   const [authError, setAuthError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false); // Доданий стан для відстеження показу пароля
@@ -28,7 +29,6 @@ export const Login = () => {
       password: '',
     },
   });
-
   const onSubmit = async (values) => {
     try {
       await dispatch(fetchUserData(values)).unwrap();
@@ -42,6 +42,8 @@ export const Login = () => {
       }
     }
     const data = await dispatch(fetchUserData(values))
+    setCookie('token', data.payload.token)
+    setCookie('user_id',data.payload._id)
     if ('token' in data.payload){
       window.localStorage.setItem('token',data.payload.token)
     }
