@@ -81,7 +81,7 @@
   }
   
   .onboarding input[type='submit'] {
-    background-color: #ff5a5f;
+    background-color: #f371a5;
     color: #fff;
     border: none;
     padding: 12px 20px;
@@ -92,5 +92,36 @@
   }
   
   .onboarding input[type='submit']:hover {
-    background-color: #ff4247;
+    background-color: #f371a5;
   }
+  .uploadButton {
+    cursor: pointer;
+    border-radius: 44px;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.uploadButton input[type="file"] {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.uploadLabel {
+    background-color: #f371a3;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.uploadLabel:hover {
+    background-color: #ff4247;
+}

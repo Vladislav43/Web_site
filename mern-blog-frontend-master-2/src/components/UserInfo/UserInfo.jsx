@@ -3,7 +3,7 @@ import styles from "./UserInfo.module.scss";
 import instance from "../../redux/axios";
 import { Container } from "@mui/material";
 import avatarImage from './../../../src/pages/OnBoarding/user-128-512.png'
-
+import photoicon from './loading-7528_512.gif'
 export const UserInfo = ({ token }) => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,16 +64,19 @@ export const UserInfo = ({ token }) => {
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (!userData) {
-    return <div>No user data available</div>;
+    return <div className={styles.Loading}>
+      <img src={photoicon} alt="" />
+    </div>;
   }
 
   return (
     <Container>
+      <div className={styles.Info}>
     <div className={styles.root}>
       <div className={styles.userInfo}>
         <img src={userData.url}
@@ -97,43 +100,67 @@ export const UserInfo = ({ token }) => {
             </span>
           </div>
           <div className={styles.field}>
-            <span className={styles.label}>Full Name:</span>
+            <span className={styles.label}>About:</span>
             <span className={styles.value}>
               {isEditing ? (
                 <input
                   type="text"
-                  value={editedFullName}
-                  onChange={(e) => setEditedFullName(e.target.value)}
                   className={styles.input}
                 />
               ) : (
-                userData.fullname
+                userData.about
               )}
             </span>
           </div>
-        </div>
-      </div>
-      <div className={styles.actions}>
+
+
+          <div className={styles.field}>
+            <span className={styles.label}>Gender:</span>
+            <span className={styles.value}>
+              {isEditing ? (
+                <input
+                  type="text"
+                  className={styles.input}
+                />
+              ) : (
+                userData.gender_identity
+              )}
+            </span>
+          </div>
+
+
+
+          <div className={styles.field}>
+            <span className={styles.label}>Gender_interest:</span>
+            <span className={styles.value}>
+              {isEditing ? (
+                <input
+                  type="text"
+                  className={styles.input}
+                />
+              ) : (
+                userData.gender_interest
+              )}
+            </span>
+          </div>
+
+          <div className={styles.field}>
+    <span className={styles.label}>Data Birthday:</span>
+    <span className={styles.value}> 
         {isEditing ? (
-          <>
             <input
-              type="password"
-              placeholder="New Password"
-              value={editedPassword}
-              onChange={(e) => setEditedPassword(e.target.value)}
-              className={styles.input}
+                type="text"
+                className={styles.input}
             />
-            <button onClick={handleSaveChanges} className={styles.saveButton}>
-              Save Changes
-            </button>
-          </>
         ) : (
-          <button onClick={handleEditClick} className={styles.editButton}>
-            Edit Profile
-          </button>
-        )}
-      </div>
-    </div>
+            `0${userData.dob_day}.0${userData.dob_month}.${userData.dob_year}`
+                  )}
+              </span>
+          </div>
+          </div>
+          </div>
+          </div>
+          </div>
     </Container>
   );
 };

@@ -32,7 +32,7 @@ const OnBoarding = () => {
             const response = await axios.put('http://localhost:7300/updateUser', {...formData})
             console.log(response)
             const success = response.status === 200
-            if (success) navigate('/anceta')
+            if (success) navigate('/')
         } catch (err) {
             console.log(err)
         }
@@ -185,47 +185,40 @@ const OnBoarding = () => {
                             value={formData.about}
                             onChange={handleChange}
                         />
-                          <label htmlFor="url">Profile Photo</label>
-                        <input
-                            type="url"
-                            name="url"
-                            id="url"
-                            onChange={handleChange}
-                            required={false}
-                        />
-                        <label className="flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded ml-5">
-                            Upload
-                        <input
-                        type="file"
-                        id="file"
-                        accept=".jpg, .jpeg, .png"
-                        onChange={(e) => {
-                            reader.onloadend = () => {
-                                const base64String = btoa(reader.result);
-                                setFormData({...formData , url : `data:image/jpeg;base64,${base64String}`})
-                              };
-                              
-                            reader.readAsBinaryString(e.target.files[0]);
-                        }}
-                        required
-                        />
-                        </label>
+                              <label htmlFor="url">Profile Photo:</label>
+                              <br></br>
+                        <div className={styles.uploadButton}>
+                            <input
+                                type="file"
+                                id="file"
+                                accept=".jpg, .jpeg, .png"
+                                onChange={(e) => {
+                                    reader.onloadend = () => {
+                                        const base64String = btoa(reader.result);
+                                        setFormData({ ...formData, url: `data:image/jpeg;base64,${base64String}` });
+                                    };
+                                    
+                                    reader.readAsBinaryString(e.target.files[0]);
+                                }}
+                                required
+                            />
+                            <button htmlFor="file" className={styles.uploadLabel}>
+                                Upload Photo
+                            </button>
                         </div>
-                      <div className ={styles.photocontainer}>
+                    </div>
+                    <div className={styles.photocontainer}>
                         {formData.url ? (
                             <img src={formData.url} alt="profile pic preview" />
                         ) : (
-                            <img src={usericon} alt = "" />
+                            <img src={usericon} alt="" />
                         )}
-                             </div>
-                        
-       
-                    </section>
-                         <input type="submit" />
-       
+                    </div>
+                </section>
+                <input type="submit" />
+            </form>
+        </div>
+    );
+};
 
-                </form>
-            </div>
-    )
-}
-export default OnBoarding
+export default OnBoarding;
