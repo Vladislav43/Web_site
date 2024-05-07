@@ -4,8 +4,6 @@ import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
 import { fetchAuthMe } from './../redux/slices/auth'; // Імпорт thunk-функції для отримання даних авторизації
 import backgroundImage from './../photo/nature-pirs-more-priboi-rozovii-105616.jpeg';
-import { Container } from '@mui/material';
-
 
 export const Home = () => {
   const dispatch = useDispatch();

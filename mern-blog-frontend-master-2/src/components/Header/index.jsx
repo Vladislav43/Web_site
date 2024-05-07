@@ -12,6 +12,7 @@ export const Header = () => {
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
   const [isLoading, setIsLoading] = useState(true);
+  const [cookies,removeCookie] = useState(['user'])
 
   useEffect(() => {
     const token = window.localStorage.getItem('token');
@@ -32,6 +33,8 @@ export const Header = () => {
     if (window.confirm('Вийти?')) {
       dispatch(logout());
       window.localStorage.removeItem('token');
+      removeCookie('user_id', cookies.user_id)
+      removeCookie('token', cookies.token)
     }
   };
 

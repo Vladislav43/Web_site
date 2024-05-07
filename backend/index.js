@@ -26,6 +26,9 @@ app.post('/auth/login', UserController.login);
 
 app.get('/auth/me', checkauth, UserController.getmy);
 app.put('/updateUser', UserController.updateUser);
+
+app.get('/messages', UserController.messages); // додано ()
+app.post('/message', UserController.message);
 app.listen(port, function (err) {
   if (err) {
     return console.log(err);

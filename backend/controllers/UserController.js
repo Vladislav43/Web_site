@@ -122,50 +122,6 @@ export const getmy = async (req, res) => {
       });
     }
   }
-//   }
-//   export const updateUser = async (req, res) => {
-//     try {
-//         const { first_name, dob_day, dob_month, dob_year, show_gender, gender_identity, gender_interest, url, about, matches } = req.body;
-
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             const errorMessages = errors.array().map(error => error.msg);
-//             return res.status(400).json({ errors: errorMessages });
-//         }
-
-//         // Find the existing user by userId
-//         setCookie('user_id',data.payload._id);
-
-//         const existingUser = await usermodel.findById(req.userId);
-//         console.log(cookie.user_id);
-      
-//         if (!existingUser) {
-//             return res.status(404).json({
-//                 message: "Користувача не знайдено"
-//             });
-//         }
-
-//         // Update user fields
-//         existingUser.first_name = first_name;
-//         existingUser.dob_day = dob_day;
-//         existingUser.dob_month = dob_month;
-//         existingUser.dob_year = dob_year;
-//         existingUser.show_gender = show_gender;
-//         existingUser.gender_identity = gender_identity;
-//         existingUser.gender_interest = gender_interest;
-//         existingUser.url = url;
-//         existingUser.about = about;
-//         existingUser.matches = matches;
-
-//         // Save the updated user in the database
-//         const updatedUser = await existingUser.save();
-
-//         res.json({ message: 'Користувача успішно оновлено', user: updatedUser });
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).json({ message: 'Помилка при оновленні користувача' });
-//     }
-// };
 
 // Update a User in the Database
 export const updateUser = async (req, res) => {
@@ -202,5 +158,60 @@ console.log(formData);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: 'Помилка при оновленні користувача' });
+  }
+};
+
+
+export const messages = async (req, res) => {
+  const user = await User.findById(userId);
+const correspondingUser = await User.findById(correspondingUserId);
+  const { userId, correspondingUserId } = req.query;
+
+  try {
+    const user = await User.findById(userId);
+    const correspondingUser = await User.findById(correspondingUserId);
+
+    if (!user || !correspondingUser) {
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+    }
+
+    const messages = user.messages.filter(
+      (message) =>
+        (message.from_userId.equals(userId) && message.to_userId.equals(correspondingUserId)) ||
+        (message.from_userId.equals(correspondingUserId) && message.to_userId.equals(userId))
+    );
+
+    res.json(messages);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка при отриманні повідомлень' });
+  }
+};
+
+export const message = async (req, res) => {
+  const user = await User.findById(userId);
+const correspondingUser = await User.findById(correspondingUserId);
+  const { userId, correspondingUserId, message } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    const correspondingUser = await User.findById(correspondingUserId);
+
+    if (!user || !correspondingUser) {
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+    }
+
+    user.messages.push({
+      from_userId: userId,
+      to_userId: correspondingUserId,
+      message
+    });
+
+    const updatedUser = await user.save();
+
+    res.json(updatedUser.messages);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка при додаванні повідомлення' });
   }
 };

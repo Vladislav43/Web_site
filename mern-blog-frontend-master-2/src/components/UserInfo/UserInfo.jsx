@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./UserInfo.module.scss";
 import instance from "../../redux/axios";
 import { Container } from "@mui/material";
-//import avatarImage from '/Users/Petrea/Documents/GitHub/Web_site/mern-blog-frontend-master-2/public/noavatar.png'
+import avatarImage from './../../../src/pages/OnBoarding/user-128-512.png';
 
 export const UserInfo = ({ token }) => {
   const [userData, setUserData] = useState(null);
@@ -11,6 +11,15 @@ export const UserInfo = ({ token }) => {
   const [editedEmail, setEditedEmail] = useState("");
   const [editedPassword, setEditedPassword] = useState("");
   const [editedFullName, setEditedFullName] = useState("");
+  const [editedAvatarUrl, setEditedAvatarUrl] = useState("");
+  const [editedDobDay, setEditedDobDay] = useState(0);
+  const [editedDobMonth, setEditedDobMonth] = useState(0);
+  const [editedDobYear, setEditedDobYear] = useState(0);
+  const [editedShowGender, setEditedShowGender] = useState("");
+  const [editedGenderIdentity, setEditedGenderIdentity] = useState("");
+  const [editedGenderInterest, setEditedGenderInterest] = useState("");
+  const [editedUrl, setEditedUrl] = useState("");
+  const [editedAbout, setEditedAbout] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,6 +45,15 @@ export const UserInfo = ({ token }) => {
     setIsEditing(true);
     setEditedEmail(userData.email);
     setEditedFullName(userData.fullname);
+    setEditedAvatarUrl(userData.avatarurl);
+    setEditedDobDay(userData.dob_day);
+    setEditedDobMonth(userData.dob_month);
+    setEditedDobYear(userData.dob_year);
+    setEditedShowGender(userData.show_gender);
+    setEditedGenderIdentity(userData.gender_identity);
+    setEditedGenderInterest(userData.gender_interest);
+    setEditedUrl(userData.url);
+    setEditedAbout(userData.about);
   };
 
   const handleSaveChanges = async () => {
@@ -46,6 +64,15 @@ export const UserInfo = ({ token }) => {
           email: editedEmail,
           password: editedPassword,
           fullname: editedFullName,
+          avatarurl: editedAvatarUrl,
+          dob_day: editedDobDay,
+          dob_month: editedDobMonth,
+          dob_year: editedDobYear,
+          show_gender: editedShowGender,
+          gender_identity: editedGenderIdentity,
+          gender_interest: editedGenderInterest,
+          url: editedUrl,
+          about: editedAbout
         },
         {
           headers: {
@@ -57,6 +84,15 @@ export const UserInfo = ({ token }) => {
         ...userData,
         email: editedEmail,
         fullname: editedFullName,
+        avatarurl: editedAvatarUrl,
+        dob_day: editedDobDay,
+        dob_month: editedDobMonth,
+        dob_year: editedDobYear,
+        show_gender: editedShowGender,
+        gender_identity: editedGenderIdentity,
+        gender_interest: editedGenderInterest,
+        url: editedUrl,
+        about: editedAbout
       });
       setIsEditing(false);
     } catch (error) {
@@ -76,11 +112,9 @@ export const UserInfo = ({ token }) => {
     <Container>
     <div className={styles.root}>
       <div className={styles.userInfo}>
-        <img
+        <img src={editedAvatarUrl || avatarImage}
           className={styles.avatar}
-         // src={avatarImage} 
-          // src={userData.avatarUrl || "https://www.seekpng.com/ima/u2e6y3e6q8r5q8a9/"}
-          alt={userData.fullname}
+          alt={editedFullName}
         />
         <div className={styles.details}>
           <div className={styles.field}>
@@ -113,6 +147,7 @@ export const UserInfo = ({ token }) => {
               )}
             </span>
           </div>
+          {/* Add more fields here for other user information */}
         </div>
       </div>
       <div className={styles.actions}>
@@ -139,3 +174,4 @@ export const UserInfo = ({ token }) => {
     </Container>
   );
 };
+

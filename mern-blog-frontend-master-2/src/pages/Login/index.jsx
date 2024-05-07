@@ -1,28 +1,25 @@
-import React , { useEffect } from 'react';
+import React  from 'react';
 import { useForm } from 'react-hook-form';
 import styles from "./Login.module.scss";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserData, selectIsAuth, selectAuthError ,fetchAuthMe} from "./../../redux/slices/auth.js";
+import { useDispatch } from "react-redux";
+import { fetchUserData} from "./../../redux/slices/auth.js";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from "react-router-dom";
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 import {useCookies} from 'react-cookie'
 
 
 export const Login = () => {
-  const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
-  const [cookies, setCookie, removeCookie] = useCookies(null)
+  const [cookies, setCookie] = useCookies(['user_id', 'token']);
   const navigate = useNavigate();
   const [authError, setAuthError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false); // Доданий стан для відстеження показу пароля
-  const isAuthenticated = useSelector((state) => Boolean(state.auth.data));
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       email: '',

@@ -13,6 +13,7 @@ import { useCookies } from 'react-cookie';
 
 export const Registration = () => {
   const dispatch = useDispatch();
+  const [cookies, setCookie] = useCookies(['user_id', 'token']);
   const navigate = useNavigate();
   const [authError, setAuthError] = useState(null);
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -24,15 +25,14 @@ export const Registration = () => {
   });
 
   // Use useCookies hook to access cookies and setCookie function
-  const [cookies, setCookie] = useCookies(['user_id']);
 
   const onSubmit = async (values) => {
     try {
       const response = await dispatch(fetchRegister(values));
       const data = response.payload;
-      const data2 = await dispatch(fetchUserData(values))
-      setCookie('token', data2.payload.token)
-      setCookie('user_id',data2.payload._id)
+      // const data2 = await dispatch(fetchUserData(values))
+      // setCookie('token', data2.payload.token)
+      // setCookie('user_id',data2.payload._id)
       if ('errors' in data) {
         setAuthError(data.errors.join(', '));
       } else if ('token' in data) {

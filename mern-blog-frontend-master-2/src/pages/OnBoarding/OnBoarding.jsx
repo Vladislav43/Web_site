@@ -2,11 +2,12 @@ import {useState} from 'react'
 import {useCookies} from 'react-cookie'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
-
 import styles from './OnBoarding.module.scss'; 
+import usericon from './user-149.svg'
 
 const OnBoarding = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(null)
+    
+    const [cookies] = useCookies(null)
     const [formData, setFormData] = useState({
         user_id: cookies.user_id,
         first_name: "",
@@ -54,7 +55,8 @@ const OnBoarding = () => {
                 <h2>CREATE ANKETA</h2>
 
                 <form onSubmit={handleSubmit}>
-                    <section>
+                    <section className={styles.wrapper}>
+                        <div className={styles.form}>
                         <label htmlFor="first_name">First Name</label>
                         <input
                             id="first_name"
@@ -183,13 +185,7 @@ const OnBoarding = () => {
                             value={formData.about}
                             onChange={handleChange}
                         />
-
-                        <input type="submit"/>
-                    </section>
-
-                    <section>
-
-                        <label htmlFor="url">Profile Photo</label>
+                          <label htmlFor="url">Profile Photo</label>
                         <input
                             type="url"
                             name="url"
@@ -197,11 +193,19 @@ const OnBoarding = () => {
                             onChange={handleChange}
                             required={true}
                         />
-                        <div className="photo-container">
-                            {formData.url && <img src={formData.url} alt="profile pic preview"/>}
                         </div>
-
+                      <div className ={styles.photocontainer}>
+                        {formData.url ? (
+                            <img src={formData.url} alt="profile pic preview" />
+                        ) : (
+                            <img src={usericon} alt = "" />
+                        )}
+                             </div>
+                        
+       
                     </section>
+                         <input type="submit" />
+       
 
                 </form>
             </div>
