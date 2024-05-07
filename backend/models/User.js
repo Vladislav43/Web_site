@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    avatarurl: String,
+    // image :{type:Object,required:true},
     // matches: [
     //     {
     //         user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

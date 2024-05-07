@@ -6,7 +6,7 @@ import styles from './OnBoarding.module.scss';
 import usericon from './user-149.svg'
 
 const OnBoarding = () => {
-    
+    const reader = new FileReader()
     const [cookies] = useCookies(null)
     const [formData, setFormData] = useState({
         user_id: cookies.user_id,
@@ -191,8 +191,25 @@ const OnBoarding = () => {
                             name="url"
                             id="url"
                             onChange={handleChange}
-                            required={true}
+                            required={false}
                         />
+                        <label className="flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded ml-5">
+                            Upload
+                        <input
+                        type="file"
+                        id="file"
+                        accept=".jpg, .jpeg, .png"
+                        onChange={(e) => {
+                            reader.onloadend = () => {
+                                const base64String = btoa(reader.result);
+                                setFormData({...formData , url : `data:image/jpeg;base64,${base64String}`})
+                              };
+                              
+                            reader.readAsBinaryString(e.target.files[0]);
+                        }}
+                        required
+                        />
+                        </label>
                         </div>
                       <div className ={styles.photocontainer}>
                         {formData.url ? (

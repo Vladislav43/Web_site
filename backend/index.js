@@ -12,6 +12,7 @@ mongoose.connect('mongodb+srv://voievoda:orewit123.@cluster0.hjg23dj.mongodb.net
 .then(()=> console.log('db ok'))
 .catch((err)=>console.log('Db error'))
 const app = express();
+app.use(express.json({ limit: '50mb' }));
 const port = 7300;
 app.use(cors())
 app.use(express.json());
@@ -21,7 +22,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/auth/register', registerValidation, UserController.register);
-
 app.post('/auth/login', UserController.login);
 
 app.get('/auth/me', checkauth, UserController.getmy);
