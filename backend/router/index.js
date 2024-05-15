@@ -8,7 +8,7 @@ router.post('/login');
 router.post('/logout');
 router.get('/activate/:link');
 router.get('/refresh')
-router.get('/users')
+router.get('/anceta', getAllUsers);
 router.put('/update', verifyToken, updateUser);
 
 module.exports = router

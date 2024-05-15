@@ -161,57 +161,66 @@ console.log(formData);
   }
 };
 
-
-export const messages = async (req, res) => {
-  const user = await User.findById(userId);
-const correspondingUser = await User.findById(correspondingUserId);
-  const { userId, correspondingUserId } = req.query;
-
+// Get all users
+export const getAllUsers = async (req, res) => {
   try {
-    const user = await User.findById(userId);
-    const correspondingUser = await User.findById(correspondingUserId);
-
-    if (!user || !correspondingUser) {
-      return res.status(404).json({ message: 'Користувача не знайдено' });
-    }
-
-    const messages = user.messages.filter(
-      (message) =>
-        (message.from_userId.equals(userId) && message.to_userId.equals(correspondingUserId)) ||
-        (message.from_userId.equals(correspondingUserId) && message.to_userId.equals(userId))
-    );
-
-    res.json(messages);
+    const users = await usermodel.find();
+    res.json(users);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Помилка при отриманні повідомлень' });
+    res.status(500).json({ message: 'Не вдалося отримати користувачів' });
   }
 };
+// export const messages = async (req, res) => {
+//   const user = await User.findById(userId);
+// const correspondingUser = await User.findById(correspondingUserId);
+//   const { userId, correspondingUserId } = req.query;
 
-export const message = async (req, res) => {
-  const user = await User.findById(userId);
-const correspondingUser = await User.findById(correspondingUserId);
-  const { userId, correspondingUserId, message } = req.body;
+//   try {
+//     const user = await User.findById(userId);
+//     const correspondingUser = await User.findById(correspondingUserId);
 
-  try {
-    const user = await User.findById(userId);
-    const correspondingUser = await User.findById(correspondingUserId);
+//     if (!user || !correspondingUser) {
+//       return res.status(404).json({ message: 'Користувача не знайдено' });
+//     }
 
-    if (!user || !correspondingUser) {
-      return res.status(404).json({ message: 'Користувача не знайдено' });
-    }
+//     const messages = user.messages.filter(
+//       (message) =>
+//         (message.from_userId.equals(userId) && message.to_userId.equals(correspondingUserId)) ||
+//         (message.from_userId.equals(correspondingUserId) && message.to_userId.equals(userId))
+//     );
 
-    user.messages.push({
-      from_userId: userId,
-      to_userId: correspondingUserId,
-      message
-    });
+//     res.json(messages);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Помилка при отриманні повідомлень' });
+//   }
+// };
 
-    const updatedUser = await user.save();
+// export const message = async (req, res) => {
+//   const user = await User.findById(userId);
+// const correspondingUser = await User.findById(correspondingUserId);
+//   const { userId, correspondingUserId, message } = req.body;
 
-    res.json(updatedUser.messages);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Помилка при додаванні повідомлення' });
-  }
-};
+//   try {
+//     const user = await User.findById(userId);
+//     const correspondingUser = await User.findById(correspondingUserId);
+
+//     if (!user || !correspondingUser) {
+//       return res.status(404).json({ message: 'Користувача не знайдено' });
+//     }
+
+//     user.messages.push({
+//       from_userId: userId,
+//       to_userId: correspondingUserId,
+//       message
+//     });
+
+//     const updatedUser = await user.save();
+
+//     res.json(updatedUser.messages);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Помилка при додаванні повідомлення' });
+//   }
+// };

@@ -36,6 +36,7 @@ const initialState = {
   data: null,
   status: 'idle',
   authError: null,
+  authloading : false
 };
 
 const authSlice = createSlice({
@@ -65,16 +66,19 @@ const authSlice = createSlice({
       state.authError = action.payload;
     },
     [fetchAuthMe.pending]: (state) => {
+      state.authloading = true;
       state.status = 'loading';
-      state.data = null;
     },
     [fetchAuthMe.fulfilled]: (state, action) => {
       state.status = 'succeeded';
       state.data = action.payload;
+      state.authloading = false;
     },
     [fetchAuthMe.rejected]: (state) => {
       state.status = 'failed';
       state.data = null;
+      state.authloading = false;
+
     },
     [fetchRegister.pending]: (state) => {
       state.status = 'loading';

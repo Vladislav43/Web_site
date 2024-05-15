@@ -4,32 +4,43 @@ import instance from "../../redux/axios";
 import { Container } from "@mui/material";
 import avatarImage from './../../../src/pages/OnBoarding/user-128-512.png'
 import photoicon from './loading-7528_512.gif'
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAuthMe } from "../../redux/slices/auth";
 export const UserInfo = ({ token }) => {
-  const [userData, setUserData] = useState(null);
+  const dispatch = useDispatch();
+ const {data} = useSelector(state => state.auth)
+  //const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedEmail, setEditedEmail] = useState("");
   const [editedPassword, setEditedPassword] = useState("");
   const [editedFullName, setEditedFullName] = useState("");
+//console.log(userData);
+const userData = data?.userData
+console.log(data);
+  useEffect( () => {
+ try {
+   dispatch(fetchAuthMe)
+ } catch (error) {
+  
+ }
+    // const fetchUserData = async () => {
+    //   try {
+    //     const response = await instance.get("http://localhost:7300/auth/me", {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
+    //     setUserData(response.data.userData);
+    //     console.log("Response data:", response.data);
+    //   } catch (error) {
+    //     console.error("Error fetching user data:", error);
+    //   } finally {
+    //     setIsLoading(false);
+     
+    // };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await instance.get("http://localhost:7300/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserData(response.data.userData);
-        console.log("Response data:", response.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
+    // fetchUserData();
   }, [token]);
 
   const handleEditClick = () => {
@@ -38,31 +49,31 @@ export const UserInfo = ({ token }) => {
     setEditedFullName(userData.fullname);
   };
 
-  const handleSaveChanges = async () => {
-    try {
-      await instance.put(
-        "http://localhost:7300/auth/update",
-        {
-          email: editedEmail,
-          password: editedPassword,
-          fullname: editedFullName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUserData({
-        ...userData,
-        email: editedEmail,
-        fullname: editedFullName,
-      });
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating user data:", error);
-    }
-  };
+  // const handleSaveChanges = async () => {
+  //   try {
+  //     await instance.put(
+  //       "http://localhost:7300/auth/update",
+  //       {
+  //         email: editedEmail,
+  //         password: editedPassword,
+  //         fullname: editedFullName,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setUserData({
+  //       ...userData,
+  //       email: editedEmail,
+  //       fullname: editedFullName,
+  //     });
+  //     setIsEditing(false);
+  //   } catch (error) {
+  //     console.error("Error updating user data:", error);
+  //   }
+  // };
 
   // if (isLoading) {
   //   return <div>Loading...</div>;

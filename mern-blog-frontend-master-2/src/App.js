@@ -6,6 +6,7 @@ import { fetchAuthMe } from "./redux/slices/auth";
 import {UserInfo} from './components/UserInfo/UserInfo.jsx'
 import OnBoarding from './pages/OnBoarding/OnBoarding.jsx'
 import { useDispatch, useSelector } from "react-redux";
+import { Anceta } from './pages/anceta/Anceta.jsx';
 function App() {
   const dispatch = useDispatch();
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/register" element={<Registration />} />
           <Route path="/user_info" element={<UserInfo />} />
           <Route path="/fill_out_a_form" element={<OnBoarding/>} />
+          <Route path="/anceta" element={<Anceta/>} />
         </Routes>
     </>
   );
