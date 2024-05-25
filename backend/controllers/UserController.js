@@ -33,10 +33,10 @@ export const register = async (req, res) => {
             passwordhash: hash,
             fullname,
             avatarurl,
+            likes : 0
         });
 
         const savedUser = await newUser.save();
-
         const token = jwt.sign(
             {
                 _id: savedUser._id,
@@ -152,7 +152,7 @@ console.log(formData);
     user.matches = formData.matches;
     user.telegramUrl = formData.telegramUrl; 
     user.instagramUrl = formData.instagramUrl;
-    user.likes = formData.likes;
+    user.likes = 0;
     // Зберігаємо оновлений документ користувача у базі даних
     const updatedUser = await user.save();
 
@@ -172,48 +172,41 @@ export const getAllUsers = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Не вдалося отримати користувачів' });
   }
-};
+};export const updateLikes = async (req, res) => {
+  const { userId, liked } = req.body;
 
-export const updateLikes = async (req, res) => {
-    const { userId, liked } = req.body;
+  try {
+      // Перевірка правильності формату userId
+      await check('userId', 'Неправильний формат ID користувача').isMongoId().run(req);
 
-    try {
-        // Перевірка правильності формату userId
-        await check('userId', 'Неправильний формат ID користувача').isMongoId().run(req);
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          const errorMessages = errors.array().map(error => error.msg);
+          return res.status(400).json({ errors: errorMessages });
+      }
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const errorMessages = errors.array().map(error => error.msg);
-            return res.status(400).json({ errors: errorMessages });
-        }
+      // Знаходження користувача за userId
+      const user = await usermodel.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: "Користувача не знайдено" });
+      }
 
-        // Знаходження користувача за userId
-        const user = await usermodel.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "Користувача не знайдено" });
-        }
+      // Перевірка, чи користувач вже натиснув на сердечко
+      if (liked) {
+          user.likes = (user.likes || 1) + 1; // Додати 1 до кількості лайків, або почати з 0, якщо значення не ініціалізовано
+      } else {
+          // Якщо користувач відмінив лайк, відніміть 1 від кількості лайків, якщо вона вже існує і більше 0
+          if (user.likes && user.likes > 0) {
+              user.likes -= 1;
+          }
+      }
 
-        // Перевірка, чи користувач вже натиснув на сердечко
-        if (liked) {
-            // Якщо користувач ще не натиснув на сердечко, додаємо 1 до кількості лайків
-            if (!user.liked) {
-                user.likes += 1;
-                user.liked = true; // Позначаємо, що користувач натиснув на сердечко
-            }
-        } else {
-            // Якщо користувач натиснув на сердечко, віднімаємо 1 від кількості лайків
-            if (user.liked) {
-                user.likes -= 1;
-                user.liked = false; // Позначаємо, що користувач відмінив лайк
-            }
-        }
+      // Збереження змін у базі даних
+      const savedUser = await user.save();
 
-        // Збереження змін у базі даних
-        await user.save();
-
-        res.json({ message: 'Кількість сердечок оновлено', user });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Помилка при оновленні кількості сердечок' });
-    }
+      res.json(savedUser);
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Помилка при оновленні кількості сердечок' });
+  }
 };

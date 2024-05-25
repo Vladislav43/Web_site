@@ -6,9 +6,9 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FavoriteIcon from '@mui/icons-material/Favorite'; // імпортуємо іконку сердечка
 import styles from './Anceta.module.scss';
 import photo from './user-505.svg';
-
 export const Anceta = ({ token }) => {
   const [usersData, setUsersData] = useState([]);
+  const [likedAnkets, setLikedAnkets] = useState([]);
 
   useEffect(() => {
     const fetchUsersData = async () => {
@@ -28,12 +28,20 @@ export const Anceta = ({ token }) => {
 
   const handleLike = async (userId, currentLikes) => {
     try {
-      // Перетворюємо поточну кількість лайків на число і додаємо 1
-      const updatedLikes = parseInt(currentLikes, 10) + 1;
+      // Перевіряємо, чи лайкнув користувач цю анкету раніше
+      if (likedAnkets.includes(userId)) {
+        return; // Якщо так, виходимо з функції
+      }
+
+      const updatedLikes = parseInt(currentLikes) + 1;
       await instance.post("http://localhost:7300/updateLikes", {
         userId,
-        likes: updatedLikes,
+        liked: true,
       });
+      
+      // Додаємо ID анкети до списку лайкнутих анкет
+      setLikedAnkets(prevState => [...prevState, userId]);
+      
       setUsersData(prevState =>
         prevState.map(user =>
           user._id === userId ? { ...user, likes: updatedLikes } : user
@@ -43,7 +51,6 @@ export const Anceta = ({ token }) => {
       console.error("Error updating likes:", error);
     }
   };
-  
 
   return (
     <Container>

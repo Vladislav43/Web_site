@@ -30,7 +30,8 @@ const UserSchema = new mongoose.Schema({
     url: String,
     about: String,
     telegramUrl: String,
-    instagramUrl:String
+    instagramUrl:String,
+    likes: { type: Number, required :true}  
 }, {
     timestamps: true
 });
