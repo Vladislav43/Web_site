@@ -28,7 +28,9 @@ const UserSchema = new mongoose.Schema({
     gender_identity: String,
     gender_interest: String,
     url: String,
-    about: String
+    about: String,
+    telegramUrl: String,
+    instagramUrl:String
 }, {
     timestamps: true
 });

@@ -76,3 +76,17 @@ $border-color: #ddd;
     grid-template-columns: 1fr;
   }
 }
+.socialIcons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.socialIcons a {
+  color: #333;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #f371a5; /* Можете замінити на будь-який інший колір */
+  }
+}

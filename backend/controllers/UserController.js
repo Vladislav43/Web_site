@@ -150,7 +150,9 @@ console.log(formData);
     user.url = formData.url;
     user.about = formData.about;
     user.matches = formData.matches;
-
+    user.telegramUrl = formData.telegramUrl; 
+    user.instagramUrl = formData.instagramUrl;
+    user.likes = formData.likes;
     // Зберігаємо оновлений документ користувача у базі даних
     const updatedUser = await user.save();
 
@@ -171,56 +173,47 @@ export const getAllUsers = async (req, res) => {
     res.status(500).json({ message: 'Не вдалося отримати користувачів' });
   }
 };
-// export const messages = async (req, res) => {
-//   const user = await User.findById(userId);
-// const correspondingUser = await User.findById(correspondingUserId);
-//   const { userId, correspondingUserId } = req.query;
 
-//   try {
-//     const user = await User.findById(userId);
-//     const correspondingUser = await User.findById(correspondingUserId);
+export const updateLikes = async (req, res) => {
+    const { userId, liked } = req.body;
 
-//     if (!user || !correspondingUser) {
-//       return res.status(404).json({ message: 'Користувача не знайдено' });
-//     }
+    try {
+        // Перевірка правильності формату userId
+        await check('userId', 'Неправильний формат ID користувача').isMongoId().run(req);
 
-//     const messages = user.messages.filter(
-//       (message) =>
-//         (message.from_userId.equals(userId) && message.to_userId.equals(correspondingUserId)) ||
-//         (message.from_userId.equals(correspondingUserId) && message.to_userId.equals(userId))
-//     );
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errorMessages = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: errorMessages });
+        }
 
-//     res.json(messages);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Помилка при отриманні повідомлень' });
-//   }
-// };
+        // Знаходження користувача за userId
+        const user = await usermodel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "Користувача не знайдено" });
+        }
 
-// export const message = async (req, res) => {
-//   const user = await User.findById(userId);
-// const correspondingUser = await User.findById(correspondingUserId);
-//   const { userId, correspondingUserId, message } = req.body;
+        // Перевірка, чи користувач вже натиснув на сердечко
+        if (liked) {
+            // Якщо користувач ще не натиснув на сердечко, додаємо 1 до кількості лайків
+            if (!user.liked) {
+                user.likes += 1;
+                user.liked = true; // Позначаємо, що користувач натиснув на сердечко
+            }
+        } else {
+            // Якщо користувач натиснув на сердечко, віднімаємо 1 від кількості лайків
+            if (user.liked) {
+                user.likes -= 1;
+                user.liked = false; // Позначаємо, що користувач відмінив лайк
+            }
+        }
 
-//   try {
-//     const user = await User.findById(userId);
-//     const correspondingUser = await User.findById(correspondingUserId);
+        // Збереження змін у базі даних
+        await user.save();
 
-//     if (!user || !correspondingUser) {
-//       return res.status(404).json({ message: 'Користувача не знайдено' });
-//     }
-
-//     user.messages.push({
-//       from_userId: userId,
-//       to_userId: correspondingUserId,
-//       message
-//     });
-
-//     const updatedUser = await user.save();
-
-//     res.json(updatedUser.messages);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Помилка при додаванні повідомлення' });
-//   }
-// };
+        res.json({ message: 'Кількість сердечок оновлено', user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Помилка при оновленні кількості сердечок' });
+    }
+};
