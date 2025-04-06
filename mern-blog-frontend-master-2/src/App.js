@@ -1,12 +1,11 @@
 import { Routes, Route } from 'react-router-dom'
 import { Header } from "./components";
-import { Home, Registration, Login } from "./pages";
+import { Home, Registration, Login, Anceta} from "./pages";
 import React from "react";
 import { fetchAuthMe } from "./redux/slices/auth";
 import {UserInfo} from './components/UserInfo/UserInfo.jsx'
 import OnBoarding from './pages/OnBoarding/OnBoarding.jsx'
 import { useDispatch, useSelector } from "react-redux";
-import { Anceta } from './pages/anceta/Anceta.jsx';
 function App() {
   const dispatch = useDispatch();
 
