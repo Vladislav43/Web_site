@@ -93,7 +93,7 @@ export const Anceta = ({ token }) => {
 
   const generateYears = () => {
     const years = [];
-    for (let year = 1950; year <= 2025; year++) {
+    for (let year = 19; year <= 207; year++) {
       years.push(year);
     }
     return years;
@@ -215,11 +215,13 @@ export const Anceta = ({ token }) => {
 
       {/* Картки користувачів */}
       <Box sx={{ marginTop: 4 }}>
-        <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={3}>
+        <Box 
+        display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={3}
+        >
           {filteredUsers
             .filter(user => user.about)
             .map((user, index) => (
-              <Box key={index} sx={{
+              <Box key={index}  sx={{
                 padding: 2,
                 borderRadius: 2,
                 boxShadow: 3,
@@ -227,14 +229,17 @@ export const Anceta = ({ token }) => {
                 transition: 'transform 0.3s ease-in-out',
                 '&:hover': { transform: 'scale(1.05)' },
                 '&:active': { transform: 'scale(0.98)' },
-                fontFamily: "'Roboto', sans-serif"
+                fontFamily: "'Roboto', sans-serif",
+                display: 'flex', // Зробити Box flex-контейнером
+                flexDirection: 'column', // Для вертикального розташування елементів всередині
+                height: '100%', // Забезпечує однакову висоту
               }}>
                 <img
                   src={user.url || photo}
                   alt="User"
                   width="100%"
-                  height="auto"
-                  style={{ borderRadius: '10px' }}
+                  height="40%"
+                  style={{ borderRadius: '10px', objectFit: 'cover', maxHeight: '275px'}}
                 />
                 <Typography variant="h6" sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '18px', color: '#333' }}>{user.fullname}</Typography>
                 <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2, fontSize: '14px', color: '#666' }}>{user.about}</Typography>
@@ -242,7 +247,7 @@ export const Anceta = ({ token }) => {
                 <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>Interest: {user.gender_interest}</Typography>
                 <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>DOB: {`0${user.dob_day}.0${user.dob_month}.${user.dob_year}`}</Typography>
 
-                <Box display="flex" justifyContent="center" gap={2} sx={{ marginTop: 2 }}>
+                <Box display="flex" justifyContent="center" gap={2} sx={{ marginTop: 'auto' , alignItems:'center'}}>
                   <Tooltip title={!user.telegramUrl ? "Користувач ще не надав інформації про Telegram" : ""}>
                     <IconButton
                       color="primary"
@@ -267,6 +272,8 @@ export const Anceta = ({ token }) => {
                   >
                     <FavoriteIcon />
                   </IconButton>
+                  <Typography variant="body" color="textPrimary" sx={{  color: '#444' }}>{user.likes}</Typography>
+
                 </Box>
               </Box>
             ))}
