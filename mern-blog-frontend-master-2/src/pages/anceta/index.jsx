@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import instance from "../../redux/axios";
-import { FormControl, FormControlLabel, Radio, RadioGroup, TextField, Box, Button, Typography,InputLabel,Select, MenuItem } from '@mui/material';
-
-import { Container, IconButton, Tooltip } from "@mui/material";
+import { FormControl, FormControlLabel, Radio, RadioGroup, Box, Button, Typography, InputLabel, Select, MenuItem, IconButton, Tooltip } from '@mui/material';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import FavoriteIcon from '@mui/icons-material/Favorite'; // імпортуємо іконку сердечка
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import styles from './Anceta.module.scss';
 import photo from './user-505.svg';
+
 export const Anceta = ({ token }) => {
   const [usersData, setUsersData] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([])
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [likedAnkets, setLikedAnkets] = useState([]);
   const [filters, setFilters] = useState({
     likes: '',
@@ -30,7 +29,7 @@ export const Anceta = ({ token }) => {
           },
         });
         setUsersData(response.data);
-        setFilteredUsers(response.data)
+        setFilteredUsers(response.data);
       } catch (error) {
         console.error("Error fetching users data:", error);
       }
@@ -40,20 +39,16 @@ export const Anceta = ({ token }) => {
 
   const handleLike = async (userId, currentLikes) => {
     try {
-      // Перевіряємо, чи лайкнув користувач цю анкету раніше
       if (likedAnkets.includes(userId)) {
-        return; // Якщо так, виходимо з функції
+        return;
       }
-
       const updatedLikes = parseInt(currentLikes) + 1;
       await instance.post("http://localhost:7300/updateLikes", {
         userId,
         liked: true,
       });
-      
-      // Додаємо ID анкети до списку лайкнутих анкет
+
       setLikedAnkets(prevState => [...prevState, userId]);
-      
       setUsersData(prevState =>
         prevState.map(user =>
           user._id === userId ? { ...user, likes: updatedLikes } : user
@@ -63,226 +58,201 @@ export const Anceta = ({ token }) => {
       console.error("Error updating likes:", error);
     }
   };
-console.log(usersData);
-const handleFilterChange = (e) => {
-  const { name, value } = e.target;
-  setFilters((prevFilters) => ({
-    ...prevFilters,
-    [name]: value
-  }));
-};
 
-// Функція для фільтрації користувачів
-const filterUsers = () => {
-  return (usersData||[]).filter(user => {
-    // Фільтрація по likes
-    if (filters.likes && filters.likes !== '' && (filters.likes === '0' && user.likes !== 0 || filters.likes === 'more' && user.likes <= 0)) {
-      return false;
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
+  const filterUsers = () => {
+    return (usersData || []).filter(user => {
+      if (filters.likes && filters.likes !== '' && (filters.likes === '0' && user.likes !== 0 || filters.likes === 'more' && user.likes <= 0)) {
+        return false;
+      }
+      if (filters.dob_year && filters.dob_year !== '' && user.dob_year !== parseInt(filters.dob_year)) {
+        return false;
+      }
+      if (filters.gender_identity && filters.gender_identity !== '' && user.gender_identity !== filters.gender_identity) {
+        return false;
+      }
+      if (filters.gender_interest && filters.gender_interest !== '' && user.gender_interest !== filters.gender_interest) {
+        return false;
+      }
+      if (filters.instagramUrl && filters.instagramUrl === '') {
+        return false;
+      }
+      if (filters.telegramUrl && filters.telegramUrl === '') {
+        return false;
+      }
+      return true;
+    });
+  };
+
+  const generateYears = () => {
+    const years = [];
+    for (let year = 1950; year <= 2025; year++) {
+      years.push(year);
     }
+    return years;
+  };
 
-    // Фільтрація по dob_year
-    if (filters.dob_year && filters.dob_year !== '' && user.dob_year !== parseInt(filters.dob_year)) {
-      return false;
-    }
-
-    // Фільтрація по gender_identity
-    if (filters.gender_identity && filters.gender_identity !== '' && user.gender_identity !== filters.gender_identity) {
-      return false;
-    }
-
-    // Фільтрація по gender_interest
-    if (filters.gender_interest && filters.gender_interest !== '' && user.gender_interest !== filters.gender_interest) {
-      return false;
-    }
-
-    // Фільтрація по instagramUrl
-    if (filters.instagramUrl && filters.instagramUrl === '' ) {
-      return false;
-    }
-
-    // Фільтрація по telegramUrl
-    if (filters.telegramUrl && filters.telegramUrl === '' ) {
-      return false;
-    }
-
-    return true;
-  });
-};
-
-const generateYears = () => {
-  const years = [];
-  for (let year = 1950; year <= 2025; year++) {
-    years.push(year);
-  }
-  return years;
-};
-
-useEffect(() => {document.body.style.overflow = 'auto'}, [])
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+  }, []);
 
   return (
-    <Container>
-       <h2>Фільтрація користувачів</h2>
-       <form>
+    <Box p={2}>
+      <Typography variant="h4" align="center" sx={{ marginBottom: 3 }}>Фільтрація користувачів</Typography>
+
+      <form className={styles.filterForm}>
         {/* Likes */}
-        <FormControl component="fieldset" margin="normal">
-          <RadioGroup
-            name="likes"
-            value={filters.likes}
-            onChange={handleFilterChange}
-            row
-          >
-            <FormControlLabel value="0" control={<Radio />} label="0 лайків" />
-            <FormControlLabel value="more" control={<Radio />} label="Більше 0 лайків" />
-          </RadioGroup>
-        </FormControl>
+        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Фільтр за лайками</Typography>
+          <FormControl component="fieldset" margin="normal">
+            <RadioGroup
+              name="likes"
+              value={filters.likes}
+              onChange={handleFilterChange}
+              row
+            >
+              <FormControlLabel value="0" control={<Radio />} label="0 лайків" />
+              <FormControlLabel value="more" control={<Radio />} label="Більше 0 лайків" />
+            </RadioGroup>
+          </FormControl>
+        </Box>
 
         {/* dob_year */}
-        {/* <FormControl fullWidth margin="normal">
-          <TextField
-            label="Рік народження"
-            name="dob_year"
-            type="number"
-            sx={{background: 'white'}}
-            value={filters.dob_year}
-            onChange={handleFilterChange}
-            placeholder="Введіть рік"
-            fullWidth
-          />
-        </FormControl> */}
-<FormControl fullWidth margin="normal">
-          <InputLabel>Рік народження</InputLabel>
-          <Select
-            label="Рік народження"
-            name="dob_year"
-            value={filters.dob_year}
-            onChange={handleFilterChange}
-            sx={{ backgroundColor: 'white' }}
-          >
-            {generateYears().map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Рік народження</Typography>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Рік народження</InputLabel>
+            <Select
+              label="Рік народження"
+              name="dob_year"
+              value={filters.dob_year}
+              onChange={handleFilterChange}
+              sx={{ backgroundColor: 'white' }}
+            >
+              {generateYears().map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+
         {/* gender_identity */}
-        <FormControl component="fieldset" margin="normal">
-          <Typography variant="body1">Гендерна ідентичність:</Typography>
-          <RadioGroup
-            name="gender_identity"
-            value={filters.gender_identity}
-            onChange={handleFilterChange}
-            row
-          >
-            <FormControlLabel value="man" control={<Radio />} label="Чоловік" />
-            <FormControlLabel value="woman" control={<Radio />} label="Жінка" />
-          </RadioGroup>
-        </FormControl>
+        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Гендерна ідентичність</Typography>
+          <FormControl component="fieldset" margin="normal">
+            <RadioGroup
+              name="gender_identity"
+              value={filters.gender_identity}
+              onChange={handleFilterChange}
+              row
+            >
+              <FormControlLabel value="man" control={<Radio />} label="Чоловік" />
+              <FormControlLabel value="woman" control={<Radio />} label="Жінка" />
+            </RadioGroup>
+          </FormControl>
+        </Box>
 
         {/* gender_interest */}
-        <FormControl component="fieldset" margin="normal">
-          <Typography variant="body1">Гендерні уподобання:</Typography>
-          <RadioGroup
-            name="gender_interest"
-            value={filters.gender_interest}
-            onChange={handleFilterChange}
-            row
-          >
-            <FormControlLabel value="man" control={<Radio />} label="Чоловіки" />
-            <FormControlLabel value="woman" control={<Radio />} label="Жінки" />
-          </RadioGroup>
-        </FormControl>
+        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Гендерні уподобання</Typography>
+          <FormControl component="fieldset" margin="normal">
+            <RadioGroup
+              name="gender_interest"
+              value={filters.gender_interest}
+              onChange={handleFilterChange}
+              row
+            >
+              <FormControlLabel value="man" control={<Radio />} label="Чоловіки" />
+              <FormControlLabel value="woman" control={<Radio />} label="Жінки" />
+            </RadioGroup>
+          </FormControl>
+        </Box>
 
-        {/* Кнопка для застосування фільтрів */}
-        <Box mt={2}>
-          <Button variant="contained" color="primary" onClick={() => {
-            setFilteredUsers(filterUsers() || [])
-          }}>
+        {/* Застосування фільтрів */}
+        <Box mt={2} display="flex" justifyContent="center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setFilteredUsers(filterUsers() || [])}
+            sx={{
+              '&:hover': {
+                transform: 'scale(1.05)',
+                transition: '0.3s ease-in-out',
+              }
+            }}
+          >
             Застосувати фільтри
           </Button>
         </Box>
       </form>
 
-{/* <form>
-  <div>
-    <label>Likes:</label>
-    <input type="radio" name="likes" value="0" checked={filters.likes === '0'} onChange={handleFilterChange} /> 0 лайків
-    <input type="radio" name="likes" value="more" checked={filters.likes === 'more'} onChange={handleFilterChange} /> Більше 0 лайків
-  </div>
-
-  <div>
-    <label>Рік народження:</label>
-    <input type="number" name="dob_year" value={filters.dob_year} onChange={handleFilterChange} placeholder="Введіть рік" />
-  </div>
-
-  <div>
-    <label>Гендерна ідентичність:</label>
-    <input type="radio" name="gender_identity" value="man" checked={filters.gender_identity === 'man'} onChange={handleFilterChange} /> Чоловік
-    <input type="radio" name="gender_identity" value="woman" checked={filters.gender_identity === 'woman'} onChange={handleFilterChange} /> Жінка
-  </div>
-
-  <div>
-    <label>Гендерні уподобання:</label>
-    <input type="radio" name="gender_interest" value="man" checked={filters.gender_interest === 'man'} onChange={handleFilterChange} /> Чоловіки
-    <input type="radio" name="gender_interest" value="woman" checked={filters.gender_interest === 'woman'} onChange={handleFilterChange} /> Жінки
-  </div>
-
-
-</form> */}
-      <div className={styles.ancetaContainer}>
-        <div className={styles.ancetaGrid}>
+      {/* Картки користувачів */}
+      <Box sx={{ marginTop: 4 }}>
+        <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={3}>
           {filteredUsers
             .filter(user => user.about)
             .map((user, index) => (
-              <div key={index} className={styles.ancetaCard}>
+              <Box key={index} sx={{
+                padding: 2,
+                borderRadius: 2,
+                boxShadow: 3,
+                backgroundColor: '#fff',
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': { transform: 'scale(1.05)' },
+                '&:active': { transform: 'scale(0.98)' },
+              }}>
                 <img
-                  width={'100px'}
                   src={user.url || photo}
                   alt="User"
-                  className={styles.ancetaImage}
+                  width="100%"
+                  height="auto"
+                  style={{ borderRadius: '10px' }}
                 />
-                <p><strong>Full name:</strong> {user.fullname}</p>
-                <p><strong>About:</strong> {user.about}</p>
-                <p><strong>Gender:</strong> {user.gender_identity}</p>
-                <p><strong>Gender Interest:</strong> {user.gender_interest}</p>
-                <p><strong>Date of Birth:</strong> {`0${user.dob_day}.0${user.dob_month}.${user.dob_year}`}</p>
-                <div className={styles.buttonContainer}>
+                <Typography variant="h6" sx={{ marginTop: 2, fontWeight: 'bold' }}>{user.fullname}</Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>{user.about}</Typography>
+                <Typography variant="body2" color="textPrimary">Gender: {user.gender_identity}</Typography>
+                <Typography variant="body2" color="textPrimary">Interest: {user.gender_interest}</Typography>
+                <Typography variant="body2" color="textPrimary">DOB: {`0${user.dob_day}.0${user.dob_month}.${user.dob_year}`}</Typography>
+
+                <Box display="flex" justifyContent="center" gap={2} sx={{ marginTop: 2 }}>
                   <Tooltip title={!user.telegramUrl ? "Користувач ще не надав інформації про Telegram" : ""}>
-                    <span>
-                      <IconButton 
-                        color="primary" 
-                        onClick={() => window.open(user.telegramUrl, "_blank")}
-                        disabled={!user.telegramUrl}
-                      >
-                        <TelegramIcon />
-                      </IconButton>
-                    </span>
+                    <IconButton
+                      color="primary"
+                      onClick={() => window.open(user.telegramUrl, "_blank")}
+                      disabled={!user.telegramUrl}
+                    >
+                      <TelegramIcon />
+                    </IconButton>
                   </Tooltip>
                   <Tooltip title={!user.instagramUrl ? "Користувач ще не надав інформації про Instagram" : ""}>
-                    <span>
-                      <IconButton 
-                        color="secondary" 
-                        onClick={() => window.open(user.instagramUrl, "_blank")}
-                        disabled={!user.instagramUrl}
-                      >
-                        <InstagramIcon />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                  <div className={styles.likeContainer}>
-                    <IconButton 
-                      color="error" 
-                      onClick={() => handleLike(user._id, user.likes)}
+                    <IconButton
+                      color="secondary"
+                      onClick={() => window.open(user.instagramUrl, "_blank")}
+                      disabled={!user.instagramUrl}
                     >
-                      <FavoriteIcon />
+                      <InstagramIcon />
                     </IconButton>
-                    <span>{user.likes}</span>
-                  </div>
-                </div>
-              </div>
+                  </Tooltip>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleLike(user._id, user.likes)}
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                </Box>
+              </Box>
             ))}
-        </div>
-      </div>
-    </Container>
+        </Box>
+      </Box>
+    </Box>
   );
 };

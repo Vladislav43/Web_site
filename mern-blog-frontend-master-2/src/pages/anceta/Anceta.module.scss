@@ -23,6 +23,51 @@ $border-color: #ddd;
   flex-grow: 1;
 }
 
+.filterForm {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.filterForm:hover {
+  transform: scale(1.02);
+}
+
+.filterForm .MuiFormControl-root {
+  margin-bottom: 15px;
+}
+
+.filterForm .MuiRadioGroup-root {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.filterForm button {
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: $primary-color;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.filterForm button:hover {
+  background-color: $secondary-color;
+  transform: scale(1.05);
+}
+
+.filterForm button:active {
+  transform: scale(0.98);
+}
+
 .ancetaCard {
   background-color: #fff;
   padding: 20px;
@@ -44,7 +89,7 @@ $border-color: #ddd;
     margin: 0 auto;
     display: flex;
     justify-content: center;
-    align-items : center;
+    align-items: center;
     border: 4px solid $primary-color;
     transition: border-color 0.3s ease, transform 0.3s ease;
 
@@ -76,6 +121,7 @@ $border-color: #ddd;
     grid-template-columns: 1fr;
   }
 }
+
 .socialIcons {
   margin-top: 10px;
   display: flex;
@@ -83,10 +129,34 @@ $border-color: #ddd;
 }
 
 .socialIcons a {
-  color: #333;
+  color: $text-color;
   transition: color 0.3s ease;
 
   &:hover {
-    color: #f371a5; /* Можете замінити на будь-який інший колір */
+    color: $secondary-color;
+  }
+}
+
+/* Стилізація Select для року народження */
+.MuiSelect-root {
+  padding: 10px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid $border-color;
+  font-size: 16px;
+  width: 150px;  /* Мінімізуємо ширину для компактного вигляду */
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: $primary-color;
+  }
+
+  &.Mui-focused {
+    border-color: $secondary-color;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .MuiSelect-icon {
+    color: $primary-color;  /* Колір іконки */
   }
 }
