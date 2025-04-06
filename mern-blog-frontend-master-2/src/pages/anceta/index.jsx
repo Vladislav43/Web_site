@@ -104,13 +104,22 @@ export const Anceta = ({ token }) => {
   }, []);
 
   return (
-    <Box p={2}>
-      <Typography variant="h4" align="center" sx={{ marginBottom: 3 }}>Фільтрація користувачів</Typography>
+    <Box p={4} sx={{ background: '#f5f5f5', borderRadius: '8px' }}>
+      <Typography variant="h4" align="center" sx={{
+        marginBottom: 3, fontFamily: "'Roboto', sans-serif", fontWeight: 600, color: '#2d2d2d', fontSize: '32px'
+      }}>
+        Фільтрація користувачів
+      </Typography>
 
-      <form className={styles.filterForm}>
+      {/* Фільтрація всередині віконця */}
+      <Box sx={{ background: '#fff', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', marginBottom: 4 }}>
+        <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '16px' }}>Фільтрація</Typography>
+        
         {/* Likes */}
-        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Фільтр за лайками</Typography>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+            Фільтр за лайками
+          </Typography>
           <FormControl component="fieldset" margin="normal">
             <RadioGroup
               name="likes"
@@ -125,8 +134,10 @@ export const Anceta = ({ token }) => {
         </Box>
 
         {/* dob_year */}
-        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Рік народження</Typography>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+            Рік народження
+          </Typography>
           <FormControl fullWidth margin="normal">
             <InputLabel>Рік народження</InputLabel>
             <Select
@@ -134,7 +145,7 @@ export const Anceta = ({ token }) => {
               name="dob_year"
               value={filters.dob_year}
               onChange={handleFilterChange}
-              sx={{ backgroundColor: 'white' }}
+              sx={{ backgroundColor: '#fff', color: '#333' }}
             >
               {generateYears().map((year) => (
                 <MenuItem key={year} value={year}>
@@ -146,8 +157,10 @@ export const Anceta = ({ token }) => {
         </Box>
 
         {/* gender_identity */}
-        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Гендерна ідентичність</Typography>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+            Гендерна ідентичність
+          </Typography>
           <FormControl component="fieldset" margin="normal">
             <RadioGroup
               name="gender_identity"
@@ -162,8 +175,10 @@ export const Anceta = ({ token }) => {
         </Box>
 
         {/* gender_interest */}
-        <Box sx={{ marginBottom: 2, background: 'white', padding: '10px', borderRadius: '8px' }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Гендерні уподобання</Typography>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+            Гендерні уподобання
+          </Typography>
           <FormControl component="fieldset" margin="normal">
             <RadioGroup
               name="gender_interest"
@@ -177,7 +192,7 @@ export const Anceta = ({ token }) => {
           </FormControl>
         </Box>
 
-        {/* Застосування фільтрів */}
+        {/* Кнопка для застосування фільтрів */}
         <Box mt={2} display="flex" justifyContent="center">
           <Button
             variant="contained"
@@ -187,13 +202,16 @@ export const Anceta = ({ token }) => {
               '&:hover': {
                 transform: 'scale(1.05)',
                 transition: '0.3s ease-in-out',
-              }
+              },
+              background: '#4CAF50',
+              padding: '10px 20px',
+              fontWeight: 'bold',
             }}
           >
             Застосувати фільтри
           </Button>
         </Box>
-      </form>
+      </Box>
 
       {/* Картки користувачів */}
       <Box sx={{ marginTop: 4 }}>
@@ -209,6 +227,7 @@ export const Anceta = ({ token }) => {
                 transition: 'transform 0.3s ease-in-out',
                 '&:hover': { transform: 'scale(1.05)' },
                 '&:active': { transform: 'scale(0.98)' },
+                fontFamily: "'Roboto', sans-serif"
               }}>
                 <img
                   src={user.url || photo}
@@ -217,11 +236,11 @@ export const Anceta = ({ token }) => {
                   height="auto"
                   style={{ borderRadius: '10px' }}
                 />
-                <Typography variant="h6" sx={{ marginTop: 2, fontWeight: 'bold' }}>{user.fullname}</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>{user.about}</Typography>
-                <Typography variant="body2" color="textPrimary">Gender: {user.gender_identity}</Typography>
-                <Typography variant="body2" color="textPrimary">Interest: {user.gender_interest}</Typography>
-                <Typography variant="body2" color="textPrimary">DOB: {`0${user.dob_day}.0${user.dob_month}.${user.dob_year}`}</Typography>
+                <Typography variant="h6" sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '18px', color: '#333' }}>{user.fullname}</Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2, fontSize: '14px', color: '#666' }}>{user.about}</Typography>
+                <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>Gender: {user.gender_identity}</Typography>
+                <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>Interest: {user.gender_interest}</Typography>
+                <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>DOB: {`0${user.dob_day}.0${user.dob_month}.${user.dob_year}`}</Typography>
 
                 <Box display="flex" justifyContent="center" gap={2} sx={{ marginTop: 2 }}>
                   <Tooltip title={!user.telegramUrl ? "Користувач ще не надав інформації про Telegram" : ""}>
