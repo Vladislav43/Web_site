@@ -19,56 +19,81 @@ export const Anceta = ({ token }) => {
     instagramUrl: '',
     telegramUrl: ''
   });
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchUsersData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await instance.get("http://localhost:7300/anceta", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUsersData(response.data);
+      setFilteredUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsersData = async () => {
-      try {
-        const response = await instance.get("http://localhost:7300/anceta", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUsersData(response.data);
-        setFilteredUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users data:", error);
-      }
-    };
     fetchUsersData();
   }, [token]);
 
+  useEffect(() => {
+    const storedLikedAnkets = JSON.parse(localStorage.getItem("likedAnkets")) || [];
+    setLikedAnkets(storedLikedAnkets);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("likedAnkets", JSON.stringify(likedAnkets));
+  }, [likedAnkets]);
+
   const handleLike = async (userId, currentLikes) => {
+    const isLiked = likedAnkets.includes(userId);
+    const updatedLikes = isLiked ? currentLikes - 1 : currentLikes + 1;
+
+    setUsersData(prevState =>
+      prevState.map(user =>
+        user._id === userId ? { ...user, likes: updatedLikes } : user
+      )
+    );
+    setLikedAnkets(prevState =>
+      isLiked ? prevState.filter(id => id !== userId) : [...prevState, userId]
+    );
+
     try {
-      if (likedAnkets.includes(userId)) {
-        return;
-      }
-      const updatedLikes = parseInt(currentLikes) + 1;
       await instance.post("http://localhost:7300/updateLikes", {
         userId,
-        liked: true,
+        liked: !isLiked,
       });
-
-      setLikedAnkets(prevState => [...prevState, userId]);
-      setUsersData(prevState =>
-        prevState.map(user =>
-          user._id === userId ? { ...user, likes: updatedLikes } : user
-        )
-      );
     } catch (error) {
       console.error("Error updating likes:", error);
+
+      setUsersData(prevState =>
+        prevState.map(user =>
+          user._id === userId ? { ...user, likes: currentLikes } : user
+        )
+      );
+      setLikedAnkets(prevState =>
+        isLiked ? [...prevState, userId] : prevState.filter(id => id !== userId)
+      );
     }
   };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prevFilters) => ({
+    setFilters(prevFilters => ({
       ...prevFilters,
       [name]: value,
     }));
   };
 
   const filterUsers = () => {
-    return (usersData || []).filter(user => {
+    return usersData.filter(user => {
       if (filters.likes && filters.likes !== '' && (filters.likes === '0' && user.likes !== 0 || filters.likes === 'more' && user.likes <= 0)) {
         return false;
       }
@@ -104,180 +129,217 @@ export const Anceta = ({ token }) => {
   }, []);
 
   return (
-    <Box p={4} sx={{ background: '#f5f5f5', borderRadius: '8px' }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        background: 'linear-gradient(135deg, #ff5f6d, #ffc371)',
+        padding: 4,
+      }}
+    >
       <Typography variant="h4" align="center" sx={{
-        marginBottom: 3, fontFamily: "'Roboto', sans-serif", fontWeight: 600, color: '#2d2d2d', fontSize: '32px'
+        marginBottom: 3, fontFamily: "'Roboto', sans-serif", fontWeight: 600, color: '#ffffff', fontSize: '32px'
       }}>
-        Фільтрація користувачів
+        User Profiles
       </Typography>
 
-      {/* Фільтрація всередині віконця */}
-      <Box sx={{ background: '#fff', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', marginBottom: 4 }}>
-        <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '16px' }}>Фільтрація</Typography>
-        
-        {/* Likes */}
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
-            Фільтр за лайками
-          </Typography>
-          <FormControl component="fieldset" margin="normal">
-            <RadioGroup
-              name="likes"
-              value={filters.likes}
-              onChange={handleFilterChange}
-              row
-            >
-              <FormControlLabel value="0" control={<Radio />} label="0 лайків" />
-              <FormControlLabel value="more" control={<Radio />} label="Більше 0 лайків" />
-            </RadioGroup>
-          </FormControl>
-        </Box>
-
-        {/* dob_year */}
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
-            Рік народження
-          </Typography>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Рік народження</InputLabel>
-            <Select
-              label="Рік народження"
-              name="dob_year"
-              value={filters.dob_year}
-              onChange={handleFilterChange}
-              sx={{ backgroundColor: '#fff', color: '#333' }}
-            >
-              {generateYears().map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-
-        {/* gender_identity */}
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
-            Гендерна ідентичність
-          </Typography>
-          <FormControl component="fieldset" margin="normal">
-            <RadioGroup
-              name="gender_identity"
-              value={filters.gender_identity}
-              onChange={handleFilterChange}
-              row
-            >
-              <FormControlLabel value="man" control={<Radio />} label="Чоловік" />
-              <FormControlLabel value="woman" control={<Radio />} label="Жінка" />
-            </RadioGroup>
-          </FormControl>
-        </Box>
-
-        {/* gender_interest */}
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
-            Гендерні уподобання
-          </Typography>
-          <FormControl component="fieldset" margin="normal">
-            <RadioGroup
-              name="gender_interest"
-              value={filters.gender_interest}
-              onChange={handleFilterChange}
-              row
-            >
-              <FormControlLabel value="man" control={<Radio />} label="Чоловіки" />
-              <FormControlLabel value="woman" control={<Radio />} label="Жінки" />
-            </RadioGroup>
-          </FormControl>
-        </Box>
-
-        {/* Кнопка для застосування фільтрів */}
-        <Box mt={2} display="flex" justifyContent="center">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setFilteredUsers(filterUsers() || [])}
-            sx={{
-              '&:hover': {
-                transform: 'scale(1.05)',
-                transition: '0.3s ease-in-out',
-              },
-              background: '#4CAF50',
-              padding: '10px 20px',
-              fontWeight: 'bold',
-            }}
-          >
-            Застосувати фільтри
-          </Button>
-        </Box>
+      {/* Toggle Filter Button */}
+      <Box display="flex" justifyContent="center" mb={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setIsFilterVisible(!isFilterVisible)}
+          sx={{
+            '&:hover': {
+              transform: 'scale(1.05)',
+              transition: '0.3s ease-in-out',
+            },
+            background: 'linear-gradient(135deg, #4CAF50, #81C784)',
+            padding: '10px 20px',
+            fontWeight: 'bold',
+            color: '#fff',
+            borderRadius: '30px',
+          }}
+        >
+          {isFilterVisible ? 'Hide Filters' : 'Show Filters'}
+        </Button>
       </Box>
 
-      {/* Картки користувачів */}
-      <Box sx={{ marginTop: 4 }}>
-        <Box 
-        display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={3}
-        >
-          {filteredUsers
-            .filter(user => user.about)
-            .map((user, index) => (
-              <Box key={index}  sx={{
-                padding: 2,
-                borderRadius: 2,
-                boxShadow: 3,
-                backgroundColor: '#fff',
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': { transform: 'scale(1.05)' },
-                '&:active': { transform: 'scale(0.98)' },
-                fontFamily: "'Roboto', sans-serif",
-                display: 'flex', // Зробити Box flex-контейнером
-                flexDirection: 'column', // Для вертикального розташування елементів всередині
-                height: '100%', // Забезпечує однакову висоту
-              }}>
-                <img
-                  src={user.url || photo}
-                  alt="User"
-                  width="100%"
-                  height="40%"
-                  style={{ borderRadius: '10px', objectFit: 'cover', maxHeight: '275px'}}
-                />
-                <Typography variant="h6" sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '18px', color: '#333' }}>{user.fullname}</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2, fontSize: '14px', color: '#666' }}>{user.about}</Typography>
-                <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>Gender: {user.gender_identity}</Typography>
-                <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>Interest: {user.gender_interest}</Typography>
-                <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>DOB: {`0${user.dob_day}.0${user.dob_month}.${user.dob_year}`}</Typography>
+      {/* Filters Section */}
+      {isFilterVisible && (
+        <Box sx={{ background: '#fff', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', marginBottom: 4, width: '100%', maxWidth: '800px' }}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '16px' }}>Filters</Typography>
+          {/* Likes */}
+          <Box sx={{ marginBottom: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+            </Typography>
+            <FormControl component="fieldset" margin="normal">
+              <RadioGroup
+                name="likes"
+                value={filters.likes}
+                onChange={handleFilterChange}
+                row
+              >
+                <FormControlLabel value="0" control={<Radio />} label="0 лайків" />
+                <FormControlLabel value="more" control={<Radio />} label="Більше 0 лайків" />
+              </RadioGroup>
+            </FormControl>
+          </Box>
 
-                <Box display="flex" justifyContent="center" gap={2} sx={{ marginTop: 'auto' , alignItems:'center'}}>
-                  <Tooltip title={!user.telegramUrl ? "Користувач ще не надав інформації про Telegram" : ""}>
-                    <IconButton
-                      color="primary"
-                      onClick={() => window.open(user.telegramUrl, "_blank")}
-                      disabled={!user.telegramUrl}
-                    >
-                      <TelegramIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={!user.instagramUrl ? "Користувач ще не надав інформації про Instagram" : ""}>
-                    <IconButton
-                      color="secondary"
-                      onClick={() => window.open(user.instagramUrl, "_blank")}
-                      disabled={!user.instagramUrl}
-                    >
-                      <InstagramIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <IconButton
-                    color="error"
-                    onClick={() => handleLike(user._id, user.likes)}
-                  >
-                    <FavoriteIcon />
-                  </IconButton>
-                  <Typography variant="body" color="textPrimary" sx={{  color: '#444' }}>{user.likes}</Typography>
+          {/* dob_year */}
+          <Box sx={{ marginBottom: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+              Рік народження
+            </Typography>
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Рік народження</InputLabel>
+              <Select
+                label="Рік народження"
+                name="dob_year"
+                value={filters.dob_year}
+                onChange={handleFilterChange}
+                sx={{ backgroundColor: '#fff', color: '#333' }}
+              >
+                {generateYears().map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
 
-                </Box>
-              </Box>
-            ))}
+          {/* gender_identity */}
+          <Box sx={{ marginBottom: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+              Гендерна ідентичність
+            </Typography>
+            <FormControl component="fieldset" margin="normal">
+              <RadioGroup
+                name="gender_identity"
+                value={filters.gender_identity}
+                onChange={handleFilterChange}
+                row
+              >
+                <FormControlLabel value="man" control={<Radio />} label="Чоловік" />
+                <FormControlLabel value="woman" control={<Radio />} label="Жінка" />
+              </RadioGroup>
+            </FormControl>
+          </Box>
+
+          {/* gender_interest */}
+          <Box sx={{ marginBottom: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#444', fontSize: '14px' }}>
+              Гендерні уподобання
+            </Typography>
+            <FormControl component="fieldset" margin="normal">
+              <RadioGroup
+                name="gender_interest"
+                value={filters.gender_interest}
+                onChange={handleFilterChange}
+                row
+              >
+                <FormControlLabel value="man" control={<Radio />} label="Чоловіки" />
+                <FormControlLabel value="woman" control={<Radio />} label="Жінки" />
+              </RadioGroup>
+            </FormControl>
+          </Box>
+
+          {/* Кнопка для застосування фільтрів */}
+          <Box mt={2} display="flex" justifyContent="center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setFilteredUsers(filterUsers() || [])}
+              sx={{
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  transition: '0.3s ease-in-out',
+                },
+                background: '#4CAF50',
+                padding: '10px 20px',
+                fontWeight: 'bold',
+              }}
+            >
+              Застосувати фільтри
+            </Button>
+          </Box>
         </Box>
+      )}
+
+      {/* User Cards */}
+      <Box sx={{ marginTop: 4, width: '100%', maxWidth: '1200px' }}>
+        {isLoading ? (
+          <Typography align="center" sx={{ fontSize: '18px', color: '#ffffff' }}>Loading...</Typography>
+        ) : (
+          <Box 
+            display="grid" 
+            gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" 
+            gap={3}
+          >
+            {filteredUsers
+              .filter(user => user.about)
+              .map((user, index) => (
+                <Box key={index} sx={{
+                  padding: 2,
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  backgroundColor: '#fff',
+                  transition: 'transform 0.3s ease-in-out',
+                  '&:hover': { transform: 'scale(1.05)' },
+                  '&:active': { transform: 'scale(0.98)' },
+                  fontFamily: "'Roboto', sans-serif",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}>
+                  <img
+                    src={user.url || photo}
+                    alt="User"
+                    width="100%"
+                    height="40%"
+                    style={{ borderRadius: '10px', objectFit: 'cover', maxHeight: '275px'}}
+                  />
+                  <Typography variant="h6" sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '18px', color: '#333' }}>{user.fullname}</Typography>
+                  <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2, fontSize: '14px', color: '#666' }}>{user.about}</Typography>
+                  <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>Gender: {user.gender_identity}</Typography>
+                  <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>Interest: {user.gender_interest}</Typography>
+                  <Typography variant="body2" color="textPrimary" sx={{ fontSize: '14px', color: '#444' }}>DOB: {`0${user.dob_day}.0${user.dob_month}.${user.dob_year}`}</Typography>
+
+                  <Box display="flex" justifyContent="center" gap={2} sx={{ marginTop: 'auto' , alignItems:'center'}}>
+                    <Tooltip title={!user.telegramUrl ? "No Telegram info provided" : ""}>
+                      <IconButton
+                        color="primary"
+                        onClick={() => window.open(user.telegramUrl, "_blank")}
+                        disabled={!user.telegramUrl}
+                      >
+                        <TelegramIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={!user.instagramUrl ? "No Instagram info provided" : ""}>
+                      <IconButton
+                        color="secondary"
+                        onClick={() => window.open(user.instagramUrl, "_blank")}
+                        disabled={!user.instagramUrl}
+                      >
+                        <InstagramIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <IconButton
+                      color="error"
+                      onClick={() => handleLike(user._id, user.likes)}
+                    >
+                      <FavoriteIcon />
+                    </IconButton>
+                    <Typography variant="body" color="textPrimary" sx={{  color: '#444' }}>{user.likes}</Typography>
+                  </Box>
+                </Box>
+              ))}
+          </Box>
+        )}
       </Box>
     </Box>
   );
