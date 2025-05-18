@@ -210,3 +210,87 @@ export const getAllUsers = async (req, res) => {
       res.status(500).json({ message: 'Помилка при оновленні кількості сердечок' });
   }
 };
+
+/**
+ * Алгоритм персоналізованого підбору партнера
+ * GET /recommend-partner
+ * Повертає масив найбільш релевантних користувачів для поточного користувача
+ * 
+ * Вхід: req.userId (авторизований користувач)
+ * Вихід: масив користувачів, відсортований за релевантністю
+ */
+export const recommendPartner = async (req, res) => {
+  try {
+    // 1. Знайти поточного користувача
+    const currentUser = await usermodel.findById(req.userId);
+    if (!currentUser) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    // 2. Витягнути всіх інших користувачів, крім себе
+    const allUsers = await usermodel.find({ _id: { $ne: req.userId } });
+
+    // 3. Функція для підрахунку релевантності (чим більше - тим краще)
+    function getScore(user) {
+      let score = 0;
+
+      // Гендерна відповідність
+      if (
+        user.gender_identity === currentUser.gender_interest &&
+        user.gender_interest === currentUser.gender_identity
+      ) {
+        score += 30;
+      } else if (
+        user.gender_identity === currentUser.gender_interest
+      ) {
+        score += 15;
+      }
+
+      // Вік (чим ближче, тим краще)
+      if (user.dob_year && currentUser.dob_year) {
+        const ageDiff = Math.abs(user.dob_year - currentUser.dob_year);
+        if (ageDiff <= 2) score += 20;
+        else if (ageDiff <= 5) score += 10;
+        else if (ageDiff <= 10) score += 5;
+      }
+
+      // Соцмережі
+      if (user.instagramUrl) score += 3;
+      if (user.telegramUrl) score += 3;
+
+      // Спільні слова в about
+      if (user.about && currentUser.about) {
+        const userWords = user.about.toLowerCase().split(/\W+/);
+        const myWords = currentUser.about.toLowerCase().split(/\W+/);
+        const common = userWords.filter(word => myWords.includes(word));
+        score += Math.min(common.length * 2, 10); // максимум 10 балів
+      }
+
+      // Популярність (лайки)
+      if (user.likes) score += Math.min(user.likes, 10);
+
+      // Пріоритет користувачам з фото
+      if (user.url) score += 5;
+
+      // Пріоритет користувачам, які заповнили анкету
+      if (user.about && user.gender_identity && user.gender_interest && user.dob_year) score += 5;
+
+      return score;
+    }
+
+    // 4. Порахувати score для кожного користувача
+    const usersWithScore = allUsers.map(user => ({
+      ...user._doc,
+      score: getScore(user)
+    }));
+
+    // 5. Відсортувати за score (від більшого до меншого)
+    usersWithScore.sort((a, b) => b.score - a.score);
+
+    // 6. Повернути топ-10 (або всі, якщо менше)
+    res.json(usersWithScore.slice(0, 10));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Помилка при підборі партнера" });
+  }
+};
