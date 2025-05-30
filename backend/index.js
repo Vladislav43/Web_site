@@ -16,7 +16,7 @@ import chatRoutes from './routes/chat.js'; // якщо у chat.js є export defa
 import { Server } from 'socket.io';
 import http from 'http';
 
-mongoose.connect('mongodb+srv://voievoda:orewit123.@cluster0.hjg23dj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect('')
 .then(()=> console.log('db ok'))
 .catch((err)=>console.log('Db error'))
 const app = express();
