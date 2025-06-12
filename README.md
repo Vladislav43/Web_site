@@ -179,5 +179,4 @@ npm start
 - StackOverflow
 
 ---
-## Screenshots
 
